@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?attr/colorOnPrimary"
+    tools:context=".ui.AlarmSettingsFragment">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/normal_padding"
+            android:orientation="vertical" >
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/enable_vibration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:theme="@style/Theme.Sparki.Switch"
+                    android:text="@string/vibrate"
+                    android:textSize="@dimen/text_size" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/alarm_ignores_silent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:theme="@style/Theme.Sparki.Switch"
+                    android:text="@string/ignore_silent"
+                    android:textSize="@dimen/text_size" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/alarm_timeout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:theme="@style/Theme.Sparki.Switch"
+                    android:text="@string/alarm_will_timeout"
+                    android:textSize="@dimen/text_size" />
+
+
+            <RelativeLayout
+                android:id="@+id/timeout_picker_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/timeout_picker"
+                    android:text="@string/timeout_after"
+                    android:textSize="@dimen/text_size"
+                    android:textAlignment="textEnd"
+                    android:textColor="?attr/colorOnSecondary" />
+
+                    <NumberPicker
+                        android:id="@+id/timeout_picker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:theme="@style/Theme.Sparki.NumberPicker"
+
+                        android:layout_margin="@dimen/normal_padding" />
+
+
+                <!-- TODO one and many -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+
+                    android:layout_toEndOf="@+id/timeout_picker"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_size"
+                    android:text="@string/minutes"
+                    android:textColor="?attr/colorOnSecondary" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+</ScrollView>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorOnPrimary">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:padding="@dimen/title_padding"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="Sparki needs to be given notification permissions to:"/>
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TableRow>
+                <ImageView
+                    android:src="@drawable/ic_circle"
+                    android:layout_weight="0"
+                    android:scaleX="0.25"
+                    android:scaleY="0.25"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/text_size"
+                    android:text="run in the background, due to limitations of android services" />
+            </TableRow>
+            <TableRow>
+                <ImageView
+                    android:src="@drawable/ic_circle"
+                    android:layout_weight="0"
+                    android:scaleX="0.25"
+                    android:scaleY="0.25"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/text_size"
+                    android:text="inform you when the battery has charged" />
+            </TableRow>
+            <TableRow>
+                <ImageView
+                    android:src="@drawable/ic_circle"
+                    android:layout_weight="0"
+                    android:scaleX="0.25"
+                    android:scaleY="0.25"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/text_size"
+                    android:text="let you put him down for a nap if you want your battery to charge to 100%" />
+            </TableRow>
+        </TableLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/normal_padding"
+            android:layout_marginTop="@dimen/normal_padding"
+            android:layout_marginEnd="@dimen/normal_padding"
+            android:layout_marginBottom="@dimen/normal_padding">
+
+            <Button
+                android:id="@+id/grant"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/normal_padding"
+                android:layout_weight="1"
+                android:text="Grant" />
+
+            <Button
+                android:id="@+id/dismiss"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Dismiss" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

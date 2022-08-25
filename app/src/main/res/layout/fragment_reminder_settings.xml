@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/Theme.Sparki"
+    android:background="?attr/colorOnPrimary"
+    tools:context=".ui.ReminderSettingsFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/normal_padding"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/reminder_repeats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/Theme.Sparki.Switch"
+            android:text="@string/send_more_than_one_reminder"
+            android:textSize="16sp" />
+
+        <RelativeLayout
+            android:id="@+id/interval_picker_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/interval_picker"
+                android:text="@string/repeat_reminders"
+                android:textAlignment="textEnd"
+                android:textColor="?attr/colorOnSecondary" />
+
+            <NumberPicker
+                android:id="@+id/interval_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="@dimen/normal_padding"
+
+                android:layout_marginTop="@dimen/normal_padding"
+                android:layout_marginEnd="@dimen/normal_padding"
+                android:layout_marginBottom="@dimen/normal_padding"
+                android:theme="@style/Theme.Sparki.NumberPicker" />
+
+
+            <!-- TODO one and many -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+
+                android:layout_toEndOf="@+id/interval_picker"
+                android:gravity="center"
+                android:text="@string/minutes"
+                android:textColor="?attr/colorOnSecondary" />
+        </RelativeLayout>
+    </LinearLayout>
+</ScrollView>

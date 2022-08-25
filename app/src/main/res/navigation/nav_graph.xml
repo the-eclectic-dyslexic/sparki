@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/SettingsFragment">
+
+    <fragment
+        android:id="@+id/SettingsFragment"
+        android:name="com.theeclecticdyslexic.sparki.ui.SettingsFragment"
+        android:label="@string/settings_fragment_label"
+        tools:layout="@layout/fragment_settings">
+
+        <action
+            android:id="@+id/action_SettingsFragment_to_ReminderSettingFragment"
+            app:destination="@id/ReminderSettingFragment" />
+        <action
+            android:id="@+id/action_SettingsFragment_to_HTTPRequestSettingsFragment"
+            app:destination="@id/HTTPRequestSettingsFragment" />
+        <action
+            android:id="@+id/action_SettingsFragment_to_AlarmSettingsFragment"
+            app:destination="@id/AlarmSettingsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/HTTPRequestSettingsFragment"
+        android:name="com.theeclecticdyslexic.sparki.ui.HTTPRequestSettingsFragment"
+        android:label="@string/http_request_fragment_label"
+        tools:layout="@layout/fragment_http_request">
+    </fragment>
+    <fragment
+        android:id="@+id/ReminderSettingFragment"
+        android:name="com.theeclecticdyslexic.sparki.ui.ReminderSettingsFragment"
+        android:label="@string/reminder_fragment_label"
+        tools:layout="@layout/fragment_reminder_settings">
+    </fragment>
+    <fragment
+        android:id="@+id/AlarmSettingsFragment"
+        android:name="com.theeclecticdyslexic.sparki.ui.AlarmSettingsFragment"
+        android:label="@string/alarm_fragment_label"
+        tools:layout="@layout/fragment_alarm_settings">
+    </fragment>
+
+</navigation>

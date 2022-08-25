@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/Theme.Sparki"
+    android:background="?attr/colorOnPrimary"
+    tools:context=".ui.SettingsFragment">
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/fab_margin"
+            android:paddingBottom="@dimen/title_padding"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/title_padding"
+                android:text="@string/general_settings" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/enable_app_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/Theme.Sparki.Switch"
+                android:layout_gravity="end"
+                android:checked="true"
+                android:text="@string/enable_assistant" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/enable_notification_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/Theme.Sparki.Switch"
+                android:layout_gravity="end"
+                android:text="@string/enable_notification_controls"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="?attr/colorOnSecondary"
+                    android:layout_margin="@dimen/normal_padding"
+
+                    android:text="@string/ui_theme" />
+
+                <Spinner
+                    android:id="@+id/theme_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|end"
+                    android:contentDescription="@string/ui_theme_dropdown"
+                    android:backgroundTint="?attr/colorPrimary"
+                    android:spinnerMode="dropdown"
+                    android:outlineProvider="bounds"
+                    android:popupBackground="?attr/colorTertiary"
+                    android:minHeight="48dp" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:paddingStart="@dimen/normal_padding"
+                android:paddingEnd="0dp"
+                android:paddingTop="@dimen/normal_padding"
+                android:paddingBottom="@dimen/normal_padding"
+                android:textColor="?attr/colorOnSecondary"
+                android:text="@string/target_battery_charge_level"
+                android:textSize="16sp" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <SeekBar
+                    android:id="@+id/chargeSeekBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="100"
+                    android:min="0"
+                    android:progress="80"
+                    android:thumbTint="?attr/colorPrimary"
+                    android:progressTint="?attr/colorAccent"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"/>
+
+                <TextView
+                    android:id="@+id/charge_percent_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="0"
+                    android:text="@string/change_target_battery_charge_level"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/title_padding"
+                android:text="@string/actions_on_charge" />
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageButton
+                        android:id="@+id/button_reminder_settings"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:backgroundTint="?attr/colorOnPrimary"
+                        android:backgroundTintMode="multiply"
+                        android:contentDescription="@string/edit_reminder_button_text"
+                        app:tint="?attr/colorPrimary"
+                        android:padding="@dimen/normal_padding"
+                        android:src="@drawable/ic_baseline_edit_24" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/enable_reminders"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:theme="@style/Theme.Sparki.Switch"
+                        android:text="@string/action_reminder"
+                        android:textSize="@dimen/text_size" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageButton
+                        android:id="@+id/button_alarm_settings"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:backgroundTint="?attr/colorOnPrimary"
+                        android:backgroundTintMode="multiply"
+                        android:contentDescription="@string/edit_alarm_button_text"
+                        android:padding="@dimen/normal_padding"
+                        app:tint="?attr/colorPrimary"
+                        android:src="@drawable/ic_baseline_edit_24" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/enable_sound_alarm"
+                        android:layout_width="270dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:theme="@style/Theme.Sparki.Switch"
+                        android:text="@string/action_alarm"
+                        android:textSize="@dimen/text_size" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageButton
+                        android:id="@+id/button_http_request_settings"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:backgroundTint="?attr/colorOnPrimary"
+                        android:backgroundTintMode="multiply"
+                        android:contentDescription="@string/edit_http_request_button_text"
+                        android:padding="@dimen/normal_padding"
+                        app:tint="?attr/colorPrimary"
+                        android:src="@drawable/ic_baseline_edit_24" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/enable_http_requests"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:theme="@style/Theme.Sparki.Switch"
+                        android:text="@string/action_http_request"
+                        android:textSize="@dimen/text_size" />
+                </TableRow>
+
+            </TableLayout>
+
+
+            <LinearLayout
+                android:id="@+id/optimizer_pitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/normal_padding"
+                    android:text="@string/battery_optimizer_explanation" />
+
+                <Button
+                    android:id="@+id/optimizer_settings_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/normal_padding"
+                    android:text="@string/take_me_to_the_optimizer" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

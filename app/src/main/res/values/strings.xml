@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name">Sparki</string>
+
+    <!-- Strings used for fragments for navigation -->
+    <string name="settings_fragment_label">Settings</string>
+    <string name="reminder_fragment_label">Reminder Settings</string>
+    <string name="alarm_fragment_label">Alarm Settings</string>
+    <string name="http_request_fragment_label">HTTP Request Settings</string>
+
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="enable_assistant">Put Sparki to work</string>
+    <string name="enable_notification_controls">Show In-Notification Controls</string>
+    <string name="target_battery_charge_level">Charge Target</string>
+    <string name="change_target_battery_charge_level">%1$d%%</string>
+
+    <string name="actions_on_charge">What Sparki should do when the battery is charged</string>
+    <string name="action_reminder">Send Reminder(s)</string>
+    <string name="action_alarm">Sound an Alarm</string>
+    <string name="action_http_request">Send HTTP request(s)</string>
+
+    <string name="edit_reminder_button_text">edit reminder settings</string>
+    <string name="edit_alarm_button_text">edit alarm settings</string>
+    <string name="edit_http_request_button_text">edit HTTP request settings</string>
+    <string name="ssid">ssid</string>
+    <string name="ssid_hint">ex: MyHomeWifi</string>
+    <string name="ssid_explainer"><b>SSID</b> is the name of the Wifi network your device will be on while charging.\n\nLeaving this blank will let Sparki message the associated <b>URL</b> no matter what WiFi network your device is on… even over data.\n\n<i>Leaving SSID blank is not recommended, as Sparki might message devices you didn\'t intend him to.</i></string>
+    <string name="url">url</string>
+    <string name="http_hint">ex: http://address/of/your/smart/plug?power=off</string>
+    <string name="minutes">minutes</string>
+    <string name="reminder_wait_explainer">Time to wait before Sparki sends repeat reminders.\n\nA setting of <b>00</b> minutes will mean no repeat reminders are sent.</string>
+    <string name="alarm_timeout_explainer">Time until Sparki turns off the alarm, without power being disconnected.\n\nA setting of <b>00</b> minutes will mean the alarm does not timeout.</string>
+    <string name="add_row_button">Add a new row</string>
+    <string name="remove_row_button">Remove this row</string>
+
+    <string name="ignore_silent">Alarm ignores silent</string>
+    <string name="vibrate">Alarm also vibrates</string>
+    <string name="timeout_after">Alarm will timeout after</string>
+    <string name="repeat_reminders">Send repeat reminders every</string>
+    <string name="take_me_to_the_optimizer">Take Me To The Optimizer Settings</string>
+    <string name="battery_optimizer_explanation">Sometimes Sparki will be prevented from running in the background by your device. If you are having trouble, either with Sparki not reminding you when the battery is charged or Sparki not properly starting when you reboot your device, first take a look at the battery optimizer and make sure Sparki is not being optimized.\n\n<i>Don\'t worry too much about the battery life impact; Sparki doesn\'t work too hard and when he does it\'s almost exclusively while the battery is charging.</i></string>
+    <string name="permission_explainer">Unfortunately, Sparki can\'t know which WiFi network your device is on without location permissions being granted \"while using the app\". The poor old boy\'s eyesight and memory aren\'t very good. If you withhold location permissions only entries with an empty <b>SSID</b> entry will work.\n\nDon\'t worry though, Sparki doesn\'t collect any of your data (location or otherwise). You, or anyone else, can confirm that for yourselves, as Sparki\'s code is open source and <a href="https://github.com/the-eclectic-dyslexic/sparki">available on GitHub</a>.</string>
+    <string name="give_permission">Give Permission</string>
+    <string name="background_pitch">Don\'t forget Sparki needs location permissions while running in the background as well!</string>
+    <string name="general_settings">General Settings</string>
+    <string name="ui_theme_dropdown">UI Theme dropdown</string>
+    <string name="ui_theme">UI Theme</string>
+    <string name="alarm_will_timeout">Alarm will timeout</string>
+    <string name="repeat_reminders_if_missed">Repeat Reminders if missed</string>
+    <string name="send_more_than_one_reminder">Keep reminding me until I notice</string>
+
+
+</resources>
