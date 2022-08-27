@@ -1,12 +1,28 @@
 <resources>
     <string name="app_name">Battery Charge Assistant</string>
-    <string name="action_settings">Settings</string>
+
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
+    <string name="settings_fragment_label">Battery Charge Assistant - Settings</string>
+    <string name="reminder_fragment_label">Reminder Settings</string>
+    <string name="battery_target_fragment_label">Battery Target Settings</string>
+    <string name="rest_call_fragment_label">REST Request Settings</string>
+
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <!-- Strings used for the settings page -->
+    <string name="general_settings">General Settings</string>
+
+    <string name="enable_assistant">Enable This App</string>
+    <string name="enable_notification_controls">Enable Notification Controls</string>
+    <string name="target_battery_charge_level">"Charge Target "</string>
+    <string name="change_target_battery_charge_level">80%</string>
+
+    <string name="actions_on_charge">What To Do Once Charged</string>
+    <string name="action_reminder">Push Notification(s)</string>
+    <string name="action_alarm">Sound Alarm</string>
+    <string name="action_http_request">Send HTTP request</string>
+
+    <string name="edit_button_text">edit</string>
+
 </resources>
