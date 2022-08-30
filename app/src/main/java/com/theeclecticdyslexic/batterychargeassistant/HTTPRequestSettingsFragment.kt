@@ -11,12 +11,9 @@ import com.theeclecticdyslexic.batterychargeassistant.databinding.BatteryTargetF
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
-class BatteryTargetFragment : Fragment() {
+class HTTPRequestSettingsFragment : Fragment() {
 
     private var _binding: BatteryTargetFragmentBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(

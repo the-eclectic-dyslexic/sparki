@@ -16,10 +16,10 @@
     <string name="enable_assistant">Enable This App</string>
     <string name="enable_notification_controls">Enable Notification Controls</string>
     <string name="target_battery_charge_level">"Charge Target "</string>
-    <string name="change_target_battery_charge_level">80%</string>
+    <string name="change_target_battery_charge_level">%1$d%%</string>
 
     <string name="actions_on_charge">What To Do Once Charged</string>
-    <string name="action_reminder">Push Notification(s)</string>
+    <string name="action_reminder">Send Reminder(s)</string>
     <string name="action_alarm">Sound Alarm</string>
     <string name="action_http_request">Send HTTP request</string>
 

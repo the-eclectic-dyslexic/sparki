@@ -17,8 +17,8 @@
     </fragment>
     <fragment
         android:id="@+id/BatteryTargetFragment"
-        android:name="com.theeclecticdyslexic.batterychargeassistant.BatteryTargetFragment"
-        android:label="@string/reminder_fragment_label"
+        android:name="com.theeclecticdyslexic.batterychargeassistant.HTTPRequestSettingsFragment"
+        android:label="@string/battery_target_fragment_label"
         tools:layout="@layout/battery_target_fragment">
 
         <action
