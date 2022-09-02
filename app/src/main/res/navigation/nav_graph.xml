@@ -12,17 +12,28 @@
         tools:layout="@layout/settings_fragment">
 
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/BatteryTargetFragment" />
+            android:id="@+id/action_SettingsFragment_to_ReminderSettingFragment"
+            app:destination="@id/ReminderSettingFragment" />
+        <action
+            android:id="@+id/action_SettingsFragment_to_HTTPRequestSettingsFragment"
+            app:destination="@id/HTTPRequestSettingsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/BatteryTargetFragment"
+        android:id="@+id/HTTPRequestSettingsFragment"
         android:name="com.theeclecticdyslexic.batterychargeassistant.HTTPRequestSettingsFragment"
-        android:label="@string/battery_target_fragment_label"
-        tools:layout="@layout/battery_target_fragment">
+        android:label="@string/http_request_fragment_label"
+        tools:layout="@layout/http_request_fragment">
 
-        <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/SettingsFragment" />
+        <!--        <action-->
+        <!--            android:id="@+id/action_SecondFragment_to_FirstFragment"-->
+        <!--            app:destination="@id/SettingsFragment" />-->
+    </fragment>
+    <fragment
+        android:id="@+id/ReminderSettingFragment"
+        android:name="com.theeclecticdyslexic.batterychargeassistant.ReminderSettingsFragment"
+        android:label="@string/reminder_fragment_label"
+        tools:layout="@layout/reminder_settings_fragment">
+        android:id="@+id/ReminderSettingsFragment"
+        android:name"com.theeclecticdyslexic.batterychargeassistant.ReminderSettingsFragment"
     </fragment>
 </navigation>

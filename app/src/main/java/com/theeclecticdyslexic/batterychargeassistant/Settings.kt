@@ -26,6 +26,7 @@ object Settings {
 
             editor.putBoolean(HTTPRequestEnabled.javaClass.name, HTTPRequestEnabled.default)
             editor.putString(HTTPRequestURL.javaClass.name, HTTPRequestURL.default)
+            editor.putString(WhiteListedSSIDs.javaClass.name, WhiteListedSSIDs.default)
 
             editor.apply()
         }
@@ -56,6 +57,9 @@ object Settings {
         const val default = false
     }
     object HTTPRequestURL {
+        const val default = ""
+    }
+    object WhiteListedSSIDs {
         const val default = ""
     }
 }

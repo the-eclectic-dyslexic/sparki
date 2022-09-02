@@ -4,8 +4,7 @@
     <!-- Strings used for fragments for navigation -->
     <string name="settings_fragment_label">Battery Charge Assistant - Settings</string>
     <string name="reminder_fragment_label">Reminder Settings</string>
-    <string name="battery_target_fragment_label">Battery Target Settings</string>
-    <string name="rest_call_fragment_label">REST Request Settings</string>
+    <string name="http_request_fragment_label">HTTP Request Settings</string>
 
     <string name="next">Next</string>
     <string name="previous">Previous</string>
@@ -24,5 +23,13 @@
     <string name="action_http_request">Send HTTP request</string>
 
     <string name="edit_button_text">edit</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="ssid_hint">ex: my_WiFi + my_5ghz_WiFi + friend\'s_WiFi</string>
+    <string name="ssid_explainer">List of WiFi network SSIDs (names) separated by plus signs (+), where you want to be able to make your HTTP request. This will prevent you sending requests to unknown or non-existent devices when you are not connected to your home network. It will also stop you sending your request over mobile data. Leaving this unchanged will allow sending your request over any connected network.</string>
+    <string name="http_hint">ex: http://address/of/smart/plug?turn=off</string>
+    <string name="http_explainer">The URL to contact upon reaching the charge target. Typically this would be used to turn off a {REST} enabled smart plug. Also typically, you would want this to be pointing at the local ip address of the device you want to contact, but you are not restricted to that.</string>
+    <string name="minutes">minutes</string>
+    <string name="reminder_wait_explainer">The number of minutes to wait between giving repeat reminder notifications. Setting this to 0 minutes disables repeat reminders.</string>
 
 </resources>
