@@ -1,28 +1,16 @@
 package com.theeclecticdyslexic.batterychargeassistant
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.util.Log
-import android.util.Log.INFO
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.theeclecticdyslexic.batterychargeassistant.databinding.SettingsFragmentBinding
 
@@ -34,16 +22,14 @@ class SettingsFragment : Fragment() {
     private var _binding: SettingsFragmentBinding? = null
     private val binding get() = _binding!!
 
-    companion object {
 
-    }
 
     private lateinit var sharedPrefs: SharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = SettingsFragmentBinding.inflate(inflater, container, false)
         sharedPrefs = requireContext().getSharedPreferences(Settings.javaClass.name, AppCompatActivity.MODE_PRIVATE)
@@ -107,12 +93,45 @@ class SettingsFragment : Fragment() {
     // TODO if plugged in when setting changed for top two options, make take effect immediately
     // TODO special listener on http requests to suggest using advanced settings
     private fun initAllSwitches() {
-        initSwitch(binding.enableAppSwitch, Settings.Enabled.javaClass.name)
+        initEnabledSwitch()
         initSwitch(binding.enableNotificationSwitch, Settings.ControlsEnabled.javaClass.name)
 
         initSwitch(binding.enableReminders, Settings.ReminderEnabled.javaClass.name)
         initSwitch(binding.enableSoundAlarm, Settings.AlarmEnabled.javaClass.name)
         initSwitch(binding.enableHttpRequests, Settings.HTTPRequestEnabled.javaClass.name)
+    }
+
+    private fun initEnabledSwitch() {
+        val switch = binding.enableAppSwitch
+        val checked = sharedPrefs.getBoolean(Settings.Enabled.javaClass.name, Settings.Enabled.default)
+        switch.isChecked = checked
+
+        switch.setOnCheckedChangeListener { _, isChecked ->
+            val editor = sharedPrefs.edit()
+            editor.putBoolean(Settings.Enabled.javaClass.name, isChecked)
+            editor.apply()
+
+            Utils.debugHttpRequest(Pair("testing", "yet_again"))
+            if (isChecked) {
+                //initService()
+            } else {
+                //dismantleService()
+            }
+        }
+    }
+
+    private fun initService() {
+        val intent = Intent(requireContext(), BackgroundService::class.java).apply{
+            action = BackgroundService::class.java.name
+        }
+        requireContext().startService(intent)
+    }
+
+    private fun dismantleService() {
+        val intent = Intent(requireContext(), BackgroundService::class.java).apply{
+            action = BackgroundService::class.java.name
+        }
+        requireContext().stopService(intent)
     }
 
     private fun initSwitch(switch: SwitchCompat, settingName: String) {
