@@ -111,11 +111,10 @@ class SettingsFragment : Fragment() {
             editor.putBoolean(Settings.Enabled.javaClass.name, isChecked)
             editor.apply()
 
-            Utils.debugHttpRequest(Pair("testing", "yet_again"))
             if (isChecked) {
-                //initService()
+                initService()
             } else {
-                //dismantleService()
+                dismantleService()
             }
         }
     }

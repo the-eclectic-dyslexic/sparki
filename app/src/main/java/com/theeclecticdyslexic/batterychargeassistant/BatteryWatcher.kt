@@ -11,25 +11,28 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import java.util.*
 
-object BatteryWatcher : BroadcastReceiver() {
+class BatteryWatcher : BroadcastReceiver() {
 
-    private const val BATTERY_MEASUREMENTS = "battery measurements"
-    var batteryMeasurements : TreeMap<Long, Float> = TreeMap()
-    var lastPercent = -1f
+    companion object {
+        val default = BatteryWatcher()
+        private const val BATTERY_MEASUREMENTS = "battery measurements"
+        var batteryMeasurements : TreeMap<Long, Float> = TreeMap()
+        var lastPercent = -1f
 
-    fun saveBatteryMeasurements(context: Context, batteryMeasurements: TreeMap<Long, Float>) {
-        val prefs = context.getSharedPreferences(BATTERY_MEASUREMENTS, Application.MODE_PRIVATE)
-        val editor = prefs.edit()
+        fun saveBatteryMeasurements(context: Context, batteryMeasurements: TreeMap<Long, Float>) {
+            val prefs = context.getSharedPreferences(BATTERY_MEASUREMENTS, Application.MODE_PRIVATE)
+            val editor = prefs.edit()
 
-        val toSave = Gson().toJson(batteryMeasurements)
-        editor.putString(BATTERY_MEASUREMENTS, toSave)
-        editor.apply()
-    }
+            val toSave = Gson().toJson(batteryMeasurements)
+            editor.putString(BATTERY_MEASUREMENTS, toSave)
+            editor.apply()
+        }
 
-    fun loadBatteryMeasurements(context: Context) : TreeMap<Long, Float> {
-        val prefs = context.getSharedPreferences(BATTERY_MEASUREMENTS, Application.MODE_PRIVATE)
-        val toDecode = prefs.getString(BATTERY_MEASUREMENTS, "{}")
-        return Gson().fromJson(toDecode, TreeMap<Long, Float>().javaClass)
+        fun loadBatteryMeasurements(context: Context) : TreeMap<Long, Float> {
+            val prefs = context.getSharedPreferences(BATTERY_MEASUREMENTS, Application.MODE_PRIVATE)
+            val toDecode = prefs.getString(BATTERY_MEASUREMENTS, "{}")
+            return Gson().fromJson(toDecode, TreeMap<Long, Float>().javaClass)
+        }
     }
 
     fun resetBatteryMeasurements(context: Context) {

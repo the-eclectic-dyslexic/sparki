@@ -33,24 +33,21 @@ object Utils {
     fun debugHttpRequest(vararg params: Pair<String, Any>) {
         if (!HTTP_DEBUGGING) return
 
+        val sb = StringBuilder()
+        sb.append(BASE_URL)
+        for ((label, param) in params) {
+            sb.append("?$label=$param")
+        }
+        val url = URL(sb.toString())
         fun buildRunnable() : Runnable {
             return Runnable {
-                val sb = StringBuilder(BASE_URL)
-                params.forEach { (label, param) ->
-                    sb.append('?')
-                        .append(label)
-                        .append('=')
-                        .append(param)
-                }
-
-                val url = URL(sb.toString())
-
                 val connection : HttpURLConnection = url.openConnection() as HttpURLConnection
                 connection.setRequestProperty("User-Agent", "Android Application:")
                 connection.setRequestProperty("Connection", "close")
                 connection.connectTimeout = 1000 * 30
                 try {
                     connection.connect()
+                    Log.d("response from $url", connection.responseCode.toString())
                 } catch(e : Exception) {
                     // do nothing
                     Log.d("exception encounter ", e.toString())
