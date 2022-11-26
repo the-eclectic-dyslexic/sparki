@@ -22,8 +22,6 @@ class SettingsFragment : Fragment() {
     private var _binding: SettingsFragmentBinding? = null
     private val binding get() = _binding!!
 
-
-
     private lateinit var sharedPrefs: SharedPreferences
 
     override fun onCreateView(
@@ -37,6 +35,11 @@ class SettingsFragment : Fragment() {
         initBatterTargetSeeker()
         initAllSwitches()
         initButtons()
+
+        val enabled = sharedPrefs.getBoolean(Settings.Enabled.javaClass.name, false)
+        if(enabled){
+            initService()
+        }
 
         return binding.root
     }

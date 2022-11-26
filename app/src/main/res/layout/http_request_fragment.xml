@@ -32,8 +32,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/normal_padding"
-                    android:backgroundTint="#F5F5F5"
-                    android:textColorHint="@color/purple_200"
+                    android:backgroundTint="?attr/colorOnPrimary"
+                    android:textColorHint="?attr/colorAccent"
                     android:hint="@string/http_hint" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -54,8 +54,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/normal_padding"
-                    android:backgroundTint="#F5F5F5"
-                    android:textColorHint="@color/purple_200"
+                    android:backgroundTint="?attr/colorOnPrimary"
+                    android:textColorHint="?attr/colorAccent"
                     android:hint="@string/ssid_hint" />
             </com.google.android.material.textfield.TextInputLayout>
 

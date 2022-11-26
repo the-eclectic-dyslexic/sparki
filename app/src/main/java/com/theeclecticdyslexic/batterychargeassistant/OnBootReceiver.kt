@@ -12,7 +12,5 @@ class OnBootReceiver : BroadcastReceiver() {
         }
 
         context.startService(backgroundIntent)
-
-
     }
 }
