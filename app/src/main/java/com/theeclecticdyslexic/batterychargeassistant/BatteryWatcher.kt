@@ -5,19 +5,19 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.BatteryManager
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
-import com.google.gson.Gson
 import java.util.*
 
-object BatteryWatcher : BroadcastReceiver() {
+class BatteryWatcher : BroadcastReceiver() {
 
-    var batteryMeasurements : TreeMap<Long, Float> = TreeMap()
-    var lastPercent = -1f
-    var chargeHandled = false
+    companion object {
+        val SINGLETON = BatteryWatcher()
 
+        var batteryMeasurements: TreeMap<Long, Float> = TreeMap()
+        var lastPercent = -1f
+        var chargeHandled = false
+    }
     private fun resetBatteryMeasurements(context: Context) {
         batteryMeasurements = TreeMap()
         lastPercent = Utils.batteryPercentage(context)
@@ -26,9 +26,13 @@ object BatteryWatcher : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.action) {
-            Intent.ACTION_POWER_CONNECTED -> onPowerConnected(context)
-            Intent.ACTION_POWER_DISCONNECTED -> onPowerDisconnected(context)
-            Intent.ACTION_BATTERY_CHANGED -> handleChargePercent(context)
+            Intent.ACTION_POWER_CONNECTED -> SINGLETON.onPowerConnected(context)
+
+            Intent.ACTION_POWER_DISCONNECTED,
+            Constants.ACTION_OVERRIDE_BATTERY_WATCHER -> SINGLETON.onPowerDisconnected(context)
+
+            Intent.ACTION_BATTERY_CHANGED -> SINGLETON.handleChargePercent(context)
+
             else -> Log.d("battery watcher received unhandled intent","received ${intent.action}")
         }
     }
@@ -79,7 +83,11 @@ object BatteryWatcher : BroadcastReceiver() {
         val target = Settings.ChargeTarget.retrieve(context)
 
         val intent = Intent(context, MainActivity::class.java)
-        val pi = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pi = PendingIntent.getActivity(
+            context,
+            0,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE)
 
         val notification = NotificationCompat.Builder(context, "reminder")
             .setSilent(false)
@@ -108,25 +116,85 @@ object BatteryWatcher : BroadcastReceiver() {
         return manager
     }
 
-    fun initializeReceivers(context: Context) {
+    fun initBroadcastReceivers(context: Context) {
         Log.d("registering receivers", "started")
         try {
-            val f = IntentFilter(Intent.ACTION_POWER_CONNECTED)
-            val f2 = IntentFilter(Intent.ACTION_POWER_DISCONNECTED)
-            context.registerReceiver(this, f)
-            context.registerReceiver(this, f2)
+            val intents = arrayOf(
+                Intent.ACTION_POWER_CONNECTED,
+                Intent.ACTION_POWER_DISCONNECTED,
+                Constants.ACTION_OVERRIDE_BATTERY_WATCHER)
+            for (i in intents) {
+                context.applicationContext.registerReceiver(SINGLETON, IntentFilter(i))
+            }
+
             Log.d("registering receivers", "completed")
         } catch (e: Exception) {
             // nothing to do, they are already registered
+            Log.d("failed to register receiver", "$e")
         }
     }
 
+    private fun buildControlsNotification(context: Context) : Notification {
+
+        val target = Settings.ChargeTarget.retrieve(context)
+
+        val intent = Intent(context, MainActivity::class.java)
+        val pi = PendingIntent.getActivity(
+            context,
+            0,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE)
+
+        // TODO put the correct pending intent in here so that the intent can be grabbed
+        val intentDisableWatcher = Intent(context, BatteryWatcher::class.java)
+            .apply { action = Constants.ACTION_OVERRIDE_BATTERY_WATCHER }
+        val piDisableWatcher = PendingIntent.getBroadcast(
+            context,
+            0,
+            intentDisableWatcher,
+            PendingIntent.FLAG_IMMUTABLE)
+
+        val notification = NotificationCompat.Builder(context, "reminder")
+            .setSilent(false)
+            .setShowWhen(false)
+            .setOngoing(false)
+            .setAutoCancel(false)
+            .setContentIntent(pi)
+            .setSmallIcon(R.drawable.ic_baseline_edit_24)
+            .setContentTitle("Currently Charging")
+            .setContentText("Waiting to hit ${target}%")
+            .addAction(R.drawable.ic_baseline_edit_24, "Override & charge to 100%", piDisableWatcher)
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+
+        return notification.build()
+    }
+
+    private fun initControlsNotificationChannel(context: Context): NotificationManager {
+        val channel = NotificationChannel(
+            "controls",
+            "Charging Controls",
+            NotificationManager.IMPORTANCE_HIGH
+        )
+
+        val manager = context.getSystemService(Service.NOTIFICATION_SERVICE) as NotificationManager
+        manager.createNotificationChannel(channel)
+
+        return manager
+    }
+
     private fun onPowerConnected(context: Context) {
-        resetBatteryMeasurements(context)
-        val enabled = Settings.Enabled.retrieve(context)
+        val enabled = Settings.Enabled.retrieve(context) // shouldn't be necessary
         if (!enabled) return
 
         startBatteryWatcher(context)
+
+        val controls = Settings.ControlsEnabled.retrieve(context)
+        if (controls) {
+            val manager = initControlsNotificationChannel(context)
+            val notification = buildControlsNotification(context)
+            manager.notify(Constants.CONTROLS_NOTIFICATION_CHANNEL, notification)
+        }
+
         // TODO show notification, if enabled
         Log.d("Charging State Change", "power connected")
         Utils.debugHttpRequest(Pair("power_connected", true))
@@ -134,20 +202,30 @@ object BatteryWatcher : BroadcastReceiver() {
 
     private fun onPowerDisconnected(context: Context) {
         stopBatteryWatcher(context)
-        // TODO hide notification, if enabled
+        var manager = initReminderNotificationChannel(context)
+        manager.cancel(Constants.REMINDER_NOTIFICATION_CHANNEL)
+        manager = initControlsNotificationChannel(context)
+        manager.cancel(Constants.CONTROLS_NOTIFICATION_CHANNEL)
+        // TODO cancel interactive notification
         Log.d("Charging State Change", "power disconnected")
         Utils.debugHttpRequest(Pair("power_connected", false))
     }
 
     private fun stopBatteryWatcher(context: Context) {
-        context.unregisterReceiver(this)
-        initializeReceivers(context)
+        try {
+            context.unregisterReceiver(SINGLETON)
+        } catch (e: Exception) {
+            Log.d("failed to unregister receivers","$e")
+        }
+        initBroadcastReceivers(context)
     }
 
     private fun startBatteryWatcher(context: Context) {
         try {
-            val filter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
-            context.registerReceiver(this, filter)
+            context.registerReceiver(
+                SINGLETON,
+                IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+            resetBatteryMeasurements(context)
         } catch (e : Exception) {
             // do nothing, already registered
         }

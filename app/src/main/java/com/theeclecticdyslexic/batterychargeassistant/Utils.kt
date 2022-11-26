@@ -15,7 +15,7 @@ import java.util.jar.Manifest
 
 object Utils {
     private const val HTTP_DEBUGGING = true
-    const val BASE_URL = "http://10.0.0.11:8000/"
+    private const val BASE_URL = "http://10.0.0.11:8000/"
 
     fun batteryPercentage(context: Context): Float {
         val batteryStatus = context.registerReceiver(

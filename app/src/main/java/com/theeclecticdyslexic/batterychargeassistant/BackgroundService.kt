@@ -1,8 +1,6 @@
 package com.theeclecticdyslexic.batterychargeassistant
 
 import android.app.*
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import android.util.Log
@@ -23,9 +21,7 @@ class BackgroundService : Service() {
         val enabled = Settings.Enabled.retrieve(this)
         try {
             if (enabled) {
-                BatteryWatcher.initializeReceivers(this)
-            } else {
-                unregisterReceiver(BatteryWatcher)
+                BatteryWatcher.SINGLETON.initBroadcastReceivers(this)
             }
         } catch (e : Exception) {
             Log.d("Exception Occurred", "While trying to start service $e")
@@ -39,7 +35,7 @@ class BackgroundService : Service() {
     override fun onDestroy() {
         Utils.debugHttpRequest(Pair("stopping_service", true))
         try {
-            unregisterReceiver(BatteryWatcher)
+            unregisterReceiver(BatteryWatcher.SINGLETON)
         } catch (e: Exception) {
             Log.d("Exception Occurred", "While trying to destroy service $e")
         }
@@ -49,7 +45,7 @@ class BackgroundService : Service() {
     private fun buildOngoingNotification() : Notification {
 
         val intent = Intent(this, MainActivity::class.java)
-        val pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
         val notification = NotificationCompat.Builder(this, "persistent")
             .setSilent(true)
