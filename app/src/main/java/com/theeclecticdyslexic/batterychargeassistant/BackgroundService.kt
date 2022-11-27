@@ -2,6 +2,7 @@ package com.theeclecticdyslexic.batterychargeassistant
 
 import android.app.*
 import android.content.Intent
+import android.os.BatteryManager
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -15,13 +16,12 @@ class BackgroundService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
 
-        Log.d("starting service", "background service")
         Utils.debugHttpRequest(Pair("starting_service", true))
 
         val enabled = Settings.Enabled.retrieve(this)
         try {
             if (enabled) {
-                BatteryWatcher.SINGLETON.initBroadcastReceivers(this)
+                BatteryWatcher.SINGLETON.beginListening(this)
             }
         } catch (e : Exception) {
             Log.d("Exception Occurred", "While trying to start service $e")
@@ -34,11 +34,7 @@ class BackgroundService : Service() {
 
     override fun onDestroy() {
         Utils.debugHttpRequest(Pair("stopping_service", true))
-        try {
-            unregisterReceiver(BatteryWatcher.SINGLETON)
-        } catch (e: Exception) {
-            Log.d("Exception Occurred", "While trying to destroy service $e")
-        }
+        BatteryWatcher.SINGLETON.stopListening(this)
     }
 
 

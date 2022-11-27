@@ -31,5 +31,6 @@
     <string name="http_explainer">The URL to contact upon reaching the charge target. Typically this would be used to turn off a {REST} enabled smart plug. Also typically, you would want this to be pointing at the local ip address of the device you want to contact, but you are not restricted to that.</string>
     <string name="minutes">minutes</string>
     <string name="reminder_wait_explainer">The number of minutes to wait between giving repeat reminder notifications. Setting this to 0 minutes disables repeat reminders.</string>
+    <!-- Strings used for fragments for navigation -->
 
 </resources>

@@ -5,8 +5,11 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.SystemClock
 import android.util.Log
+import androidx.core.app.AlarmManagerCompat
 import androidx.core.app.NotificationCompat
+import androidx.core.view.ContentInfoCompat.Flags
 import java.util.*
 
 class BatteryWatcher : BroadcastReceiver() {
@@ -18,6 +21,22 @@ class BatteryWatcher : BroadcastReceiver() {
         var lastPercent = -1f
         var chargeHandled = false
     }
+
+    fun beginListening(context: Context) {
+        initBroadcastReceivers(context)
+        if (Utils.isPlugged(context)) {
+            onPowerConnected(context)
+        }
+    }
+
+    fun stopListening(context: Context) {
+        try {
+            context.unregisterReceiver(SINGLETON)
+        } catch (e: Exception) {
+            Log.d("Exception Occurred", "While trying to destroy service $e")
+        }
+    }
+
     private fun resetBatteryMeasurements(context: Context) {
         batteryMeasurements = TreeMap()
         lastPercent = Utils.batteryPercentage(context)
@@ -33,7 +52,7 @@ class BatteryWatcher : BroadcastReceiver() {
 
             Intent.ACTION_BATTERY_CHANGED -> SINGLETON.handleChargePercent(context)
 
-            else -> Log.d("battery watcher received unhandled intent","received ${intent.action}")
+            else -> Log.d("battery watcher received unhandled intent:","${intent.action}")
         }
     }
 
@@ -59,23 +78,59 @@ class BatteryWatcher : BroadcastReceiver() {
     private fun handleFullyCharged(context: Context) {
         val reminderEnabled = Settings.ReminderEnabled.retrieve(context)
         if (reminderEnabled) {
-            // TODO push reminder
-            val manager = initReminderNotificationChannel(context)
-            val notification = buildReminderNotification(context)
-            manager.notify(Constants.REMINDER_NOTIFICATION_CHANNEL, notification)
+            pushReminder(context)
         }
 
         val alarmEnabled = Settings.AlarmEnabled.retrieve(context)
         if (alarmEnabled) {
-            // TODO sound alarm
+            soundAlarm(context)
         }
 
         val httpRequestEnabled = Settings.HTTPRequestEnabled.retrieve(context)
         if (httpRequestEnabled) {
             // TODO send httpRequest
-            Utils.debugHttpRequest(Pair("plug_power", "off"))
+            sendHTTPRequests(context)
         }
 
+        // no need to check if controls are active
+        // if there is no notification to cancel, there shouldn't be an issue
+        val manager = initControlsNotificationChannel(context)
+        manager.cancel(Constants.CONTROLS_NOTIFICATION_CHANNEL)
+
+        stopBatteryWatcher(context)
+    }
+
+    private fun pushReminder(context: Context) {
+        val manager = initReminderNotificationChannel(context)
+        val notification = buildReminderNotification(context)
+        manager.notify(Constants.REMINDER_NOTIFICATION_CHANNEL, notification)
+    }
+
+    // TODO merge notification controls with alarm
+    private fun soundAlarm(context: Context) {
+        val alarm = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(
+            context,
+            BatteryWatcher::class.java).apply {
+            action = Constants.ACTION_SOUND_ALARM
+            flags = Intent.FLAG_RECEIVER_FOREGROUND or
+                    Intent.FLAG_ACTIVITY_TASK_ON_HOME
+        }
+        val pi = PendingIntent.getBroadcast(
+            context,
+            0,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE)
+
+        alarm.set(
+            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+            SystemClock.elapsedRealtime() + 1,
+            pi
+        )
+    }
+
+    private fun sendHTTPRequests(context: Context) {
+        Utils.debugHttpRequest(Pair("plug_power", "off"))
     }
 
     private fun buildReminderNotification(context: Context) : Notification {
@@ -116,7 +171,7 @@ class BatteryWatcher : BroadcastReceiver() {
         return manager
     }
 
-    fun initBroadcastReceivers(context: Context) {
+    private fun initBroadcastReceivers(context: Context) {
         Log.d("registering receivers", "started")
         try {
             val intents = arrayOf(

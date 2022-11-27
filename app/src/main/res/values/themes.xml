@@ -10,11 +10,23 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
         <!-- Customize your theme here. -->
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="Theme.BatteryChargeAssistant.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.BatteryChargeAssistant.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Theme.BatteryChargeAssistant.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.BatteryChargeAssistant.Fullscreen" parent="Theme.BatteryChargeAssistant">
+        <item name="android:actionBarStyle">
+            @style/Widget.Theme.BatteryChargeAssistant.ActionBar.Fullscreen
+        </item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+    </style>
+
 </resources>

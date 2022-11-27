@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
@@ -18,11 +18,11 @@
         android:theme="@style/Theme.BatteryChargeAssistant"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
         <service
             android:name=".BackgroundService"
             android:enabled="true"
-            android:exported="true"
-            />
+            android:exported="true" />
 
         <activity
             android:name=".MainActivity"
