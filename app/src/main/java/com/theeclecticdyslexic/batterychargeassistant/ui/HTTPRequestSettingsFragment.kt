@@ -1,4 +1,4 @@
-package com.theeclecticdyslexic.batterychargeassistant
+package com.theeclecticdyslexic.batterychargeassistant.ui
 
 import android.os.Bundle
 import android.text.Editable
@@ -8,8 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
-import com.google.android.material.textfield.TextInputEditText
+import com.theeclecticdyslexic.batterychargeassistant.misc.Settings
 import com.theeclecticdyslexic.batterychargeassistant.databinding.HttpRequestFragmentBinding
 
 /**
@@ -33,8 +32,14 @@ class HTTPRequestSettingsFragment : Fragment() {
 
     private fun initTextInputs() {
         val prefs = requireContext().getSharedPreferences(Settings.javaClass.name, AppCompatActivity.MODE_PRIVATE)
-        val url = prefs.getString(Settings.HTTPRequestURL.javaClass.name, Settings.HTTPRequestURL.default)
-        val ssids = prefs.getString(Settings.WhiteListedSSIDs.javaClass.name, Settings.HTTPRequestURL.default)
+        val url = prefs.getString(
+            Settings.HTTPRequestURL.javaClass.name,
+            Settings.HTTPRequestURL.default
+        )
+        val ssids = prefs.getString(
+            Settings.WhiteListedSSIDs.javaClass.name,
+            Settings.HTTPRequestURL.default
+        )
 
         binding.urlTextInput.setText(url)
         binding.ssidsTextInput.setText(ssids)

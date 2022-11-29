@@ -1,4 +1,4 @@
-package com.theeclecticdyslexic.batterychargeassistant
+package com.theeclecticdyslexic.batterychargeassistant.background
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -11,6 +11,8 @@ class OnBootReceiver : BroadcastReceiver() {
             action = BackgroundService::class.java.name
         }
 
-        context.startService(backgroundIntent)
+        if (BackgroundService.shouldRun(context)) {
+            context.startService(backgroundIntent)
+        }
     }
 }
