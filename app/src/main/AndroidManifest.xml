@@ -47,7 +47,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".background.PrimaryReceiver"
+            android:name=".background.MainReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

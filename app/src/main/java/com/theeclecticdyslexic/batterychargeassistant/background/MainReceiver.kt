@@ -1,50 +1,44 @@
 package com.theeclecticdyslexic.batterychargeassistant.background
 
-import android.app.*
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.media.AudioAttributes
+import android.media.Ringtone
 import android.media.RingtoneManager
-import android.net.Uri
-import android.os.CombinedVibration
-import android.os.SystemClock
-import android.os.VibrationEffect
-import android.os.Vibrator
-import android.os.VibratorManager
 import android.util.Log
-import androidx.core.content.getSystemService
 import com.theeclecticdyslexic.batterychargeassistant.misc.*
 import java.util.*
 
 
-class PrimaryReceiver : BroadcastReceiver() {
+class MainReceiver : BroadcastReceiver() {
 
     companion object {
-        val SINGLETON = PrimaryReceiver()
+        val SINGLETON = MainReceiver()
     }
 
     private var batteryMeasurements: TreeMap<Long, Float> = TreeMap()
     private var lastPercent = -1f
     private var chargeHandled = false
-    private var ringer: PendingIntent? = null
+    private lateinit var ringer: Ringtone
 
-    private val broadcastAlwaysWatched = listOf(
+    private val alwaysReceiving = listOf(
         Intent.ACTION_POWER_CONNECTED,
         Intent.ACTION_POWER_DISCONNECTED,
         Action.OVERRIDE_WATCHDOG.id,
-        Action.SOUND_ALARM.id,
         Action.STOP_ALARM.id
     )
 
-    fun beginListening(context: Context) {
+    fun beginReceiving(context: Context) {
         initBroadcastReceivers(context)
         if (Utils.isPlugged(context)) {
             onPowerConnected(context)
         }
+        initRinger(context)
     }
 
-    fun stopListening(context: Context) {
+    fun stopReceiving(context: Context) {
         try {
             context.unregisterReceiver(SINGLETON)
         } catch (e: Exception) {
@@ -67,28 +61,30 @@ class PrimaryReceiver : BroadcastReceiver() {
 
             Intent.ACTION_BATTERY_CHANGED -> SINGLETON.handleChargePercent(context)
 
-            Action.SOUND_ALARM.id -> makeNoise(context)
+            Action.STOP_ALARM.id -> playRinger()
 
             else -> Log.d("battery watcher received unhandled intent:","${intent.action}")
         }
     }
 
-    private fun makeNoise(context: Context) {
-
-        Debug.logOverREST(Pair("alarm", "starting"))
+    private fun initRinger(context: Context){
         val alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
-        val r = RingtoneManager.getRingtone(context, alarmUri)
-
-        r.play()
+        ringer = RingtoneManager.getRingtone(context, alarmUri)
+        ringer.audioAttributes =
+            AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ALARM)
+                .setContentType(AudioAttributes.CONTENT_TYPE_UNKNOWN)
+                .build()
     }
 
-    private fun stopNoise(context: Context) {
-        if (ringer == null) return
+    private fun playRinger() {
+        Debug.logOverREST(Pair("alarm", "starting"))
+        ringer.play()
+    }
 
+    private fun stopRinger() {
         Debug.logOverREST(Pair("alarm", "stopping"))
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.cancel(ringer)
-        ringer = null
+        ringer.stop()
     }
 
     private fun handleChargePercent(context: Context) {
@@ -118,7 +114,7 @@ class PrimaryReceiver : BroadcastReceiver() {
 
         val alarmEnabled = Settings.AlarmEnabled.retrieve(context)
         if (alarmEnabled) {
-            soundAlarm(context)
+            playRinger()
         }
 
         val httpRequestEnabled = Settings.HTTPRequestEnabled.retrieve(context)
@@ -132,29 +128,6 @@ class PrimaryReceiver : BroadcastReceiver() {
         stopBatteryWatcher(context)
     }
 
-    // TODO merge notification controls with alarm
-    private fun soundAlarm(context: Context) {
-        val alarm = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(
-            context,
-            PrimaryReceiver::class.java).apply {
-            action = Action.SOUND_ALARM.id
-            flags = Intent.FLAG_RECEIVER_FOREGROUND or
-                    Intent.FLAG_ACTIVITY_TASK_ON_HOME
-        }
-        ringer = PendingIntent.getBroadcast(
-            context,
-            0,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE)
-
-        alarm.set(
-            AlarmManager.ELAPSED_REALTIME_WAKEUP,
-            SystemClock.elapsedRealtime() + 1, // run 1ms from now
-            ringer
-        )
-    }
-
     private fun sendHTTPRequests() {
         Debug.logOverREST(Pair("plug_power", "off"))
     }
@@ -162,7 +135,7 @@ class PrimaryReceiver : BroadcastReceiver() {
     private fun initBroadcastReceivers(context: Context) {
         Log.d("registering receivers", "started")
         try {
-            val intents = broadcastAlwaysWatched
+            val intents = alwaysReceiving
             for (i in intents) {
                 context.applicationContext.registerReceiver(SINGLETON, IntentFilter(i))
             }
@@ -195,7 +168,7 @@ class PrimaryReceiver : BroadcastReceiver() {
 
         NotificationHelper.cancelReminder(context)
         NotificationHelper.cancelControls(context)
-        stopNoise(context)
+        stopRinger()
         Log.d("Charging State Change", "power disconnected")
         Debug.logOverREST(Pair("power_connected", false))
     }

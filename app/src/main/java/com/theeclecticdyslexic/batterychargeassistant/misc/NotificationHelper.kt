@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import com.theeclecticdyslexic.batterychargeassistant.R
-import com.theeclecticdyslexic.batterychargeassistant.background.PrimaryReceiver
+import com.theeclecticdyslexic.batterychargeassistant.background.MainReceiver
 import com.theeclecticdyslexic.batterychargeassistant.ui.MainActivity
 
 object NotificationHelper {
@@ -60,7 +60,7 @@ object NotificationHelper {
             PendingIntent.FLAG_IMMUTABLE)
 
         // TODO put the correct pending intent in here so that the intent can be grabbed
-        val intentDisableWatcher = Intent(context, PrimaryReceiver::class.java)
+        val intentDisableWatcher = Intent(context, MainReceiver::class.java)
             .apply { action = Action.OVERRIDE_WATCHDOG.id }
         val piDisableWatcher = PendingIntent.getBroadcast(
             context,
