@@ -1,4 +1,4 @@
-package com.theeclecticdyslexic.batterychargeassistant
+package com.theeclecticdyslexic.batterychargeassistant.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.NumberPicker
 import androidx.appcompat.app.AppCompatActivity
+import com.theeclecticdyslexic.batterychargeassistant.misc.Settings
 import com.theeclecticdyslexic.batterychargeassistant.databinding.ReminderSettingsFragmentBinding
 
 class ReminderSettingsFragment : Fragment() {
@@ -28,7 +29,10 @@ class ReminderSettingsFragment : Fragment() {
 
     private fun initNumberPickers() {
         val prefs = requireContext().getSharedPreferences(Settings.javaClass.name, AppCompatActivity.MODE_PRIVATE)
-        val reminderFrequency = prefs.getInt(Settings.ReminderFrequency.javaClass.name, Settings.ReminderFrequency.default)
+        val reminderFrequency = prefs.getInt(
+            Settings.ReminderFrequency.javaClass.name,
+            Settings.ReminderFrequency.default
+        )
 
         val tens = reminderFrequency / 10
         val ones = reminderFrequency % 10
