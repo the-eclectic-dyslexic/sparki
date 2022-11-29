@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/SettingsFragment"
-        android:name="com.theeclecticdyslexic.batterychargeassistant.SettingsFragment"
+        android:name="com.theeclecticdyslexic.batterychargeassistant.ui.SettingsFragment"
         android:label="@string/settings_fragment_label"
         tools:layout="@layout/settings_fragment">
 
@@ -20,7 +20,7 @@
     </fragment>
     <fragment
         android:id="@+id/HTTPRequestSettingsFragment"
-        android:name="com.theeclecticdyslexic.batterychargeassistant.HTTPRequestSettingsFragment"
+        android:name="com.theeclecticdyslexic.batterychargeassistant.ui.HTTPRequestSettingsFragment"
         android:label="@string/http_request_fragment_label"
         tools:layout="@layout/http_request_fragment">
 
@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/ReminderSettingFragment"
-        android:name="com.theeclecticdyslexic.batterychargeassistant.ReminderSettingsFragment"
+        android:name="com.theeclecticdyslexic.batterychargeassistant.ui.ReminderSettingsFragment"
         android:label="@string/reminder_fragment_label"
         tools:layout="@layout/reminder_settings_fragment">
         android:id="@+id/ReminderSettingsFragment"

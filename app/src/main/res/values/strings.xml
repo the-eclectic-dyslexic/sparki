@@ -13,7 +13,7 @@
     <string name="general_settings">General Settings</string>
 
     <string name="enable_assistant">Enable This App</string>
-    <string name="enable_notification_controls">Enable Notification Controls</string>
+    <string name="enable_notification_controls">Show In-Notification Controls</string>
     <string name="target_battery_charge_level">"Charge Target "</string>
     <string name="change_target_battery_charge_level">%1$d%%</string>
 
@@ -23,8 +23,6 @@
     <string name="action_http_request">Send HTTP request</string>
 
     <string name="edit_button_text">edit</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="ssid_hint">ex: my_WiFi + my_5ghz_WiFi + friend\'s_WiFi</string>
     <string name="ssid_explainer">List of WiFi network SSIDs (names) separated by plus signs (+), where you want to be able to make your HTTP request. This will prevent you sending requests to unknown or non-existent devices when you are not connected to your home network. It will also stop you sending your request over mobile data. Leaving this unchanged will allow sending your request over any connected network.</string>
     <string name="http_hint">ex: http://address/of/smart/plug?turn=off</string>
