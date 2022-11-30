@@ -158,9 +158,4 @@ class SettingsFragment : Fragment() {
                 && plugged
                 && Utils.canComplete(context)
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 }

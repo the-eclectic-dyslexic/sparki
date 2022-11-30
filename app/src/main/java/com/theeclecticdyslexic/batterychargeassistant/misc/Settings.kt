@@ -1,7 +1,9 @@
 package com.theeclecticdyslexic.batterychargeassistant.misc
 
 import android.content.Context
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.google.gson.Gson
 
 object Settings {
 
@@ -20,13 +22,17 @@ object Settings {
             editor.putInt(ChargeTarget.javaClass.name, ChargeTarget.default)
 
             editor.putBoolean(ReminderEnabled.javaClass.name, ReminderEnabled.default)
-            editor.putInt(ReminderFrequency.javaClass.name, ReminderFrequency.default)
+            editor.putInt(ReminderFrequencyMinutes.javaClass.name, ReminderFrequencyMinutes.default)
 
             editor.putBoolean(AlarmEnabled.javaClass.name, AlarmEnabled.default)
+            editor.putBoolean(AlarmIgnoresSilent.javaClass.name, AlarmIgnoresSilent.default)
+            editor.putBoolean(AlarmVibrates.javaClass.name, AlarmVibrates.default)
+            editor.putInt(AlarmTimeoutMinutes.javaClass.name, AlarmTimeoutMinutes.default)
 
             editor.putBoolean(HTTPRequestEnabled.javaClass.name, HTTPRequestEnabled.default)
             editor.putString(HTTPRequestURL.javaClass.name, HTTPRequestURL.default)
             editor.putString(WhiteListedSSIDs.javaClass.name, WhiteListedSSIDs.default)
+            editor.putString(HTTPRequests.javaClass.name, HTTPRequests.default)
 
             editor.apply()
         }
@@ -64,7 +70,7 @@ object Settings {
             return sharedPrefs.getBoolean(this.javaClass.name, default)
         }
     }
-    object ReminderFrequency {
+    object ReminderFrequencyMinutes {
         const val default = 0
         fun retrieve(context: Context): Int {
             val sharedPrefs = context.getSharedPreferences(Settings.javaClass.name, AppCompatActivity.MODE_PRIVATE)
@@ -78,6 +84,15 @@ object Settings {
             return sharedPrefs.getBoolean(this.javaClass.name, default)
         }
     }
+    object AlarmIgnoresSilent {
+        const val default = true
+    }
+    object AlarmVibrates {
+        const val default = false
+    }
+    object AlarmTimeoutMinutes {
+        const val default = 2
+    }
     object HTTPRequestEnabled {
         const val default = false
         fun retrieve(context: Context): Boolean {
@@ -85,18 +100,30 @@ object Settings {
             return sharedPrefs.getBoolean(this.javaClass.name, default)
         }
     }
+    object HTTPRequests {
+        val default : String by lazy {
+            val defaultArray = arrayOf(HTTPRequest("", ""))
+            Gson().toJson(defaultArray)
+        }
+        fun retrieve(context: Context): Array<HTTPRequest> {
+            val sharedPrefs = context.getSharedPreferences(Settings.javaClass.name, AppCompatActivity.MODE_PRIVATE)
+            val json = sharedPrefs.getString(this.javaClass.name, default)!!
+            return Gson().fromJson(json, Array<HTTPRequest>::class.java)
+        }
+        fun store(context: Context, entries: Array<HTTPRequest>) {
+            val json = Gson().toJson(entries)
+
+            val sharedPrefs = context.getSharedPreferences(Settings.javaClass.name, AppCompatActivity.MODE_PRIVATE)
+            val editor = sharedPrefs.edit()
+
+            editor.putString(HTTPRequests.javaClass.name, json)
+            editor.apply()
+        }
+    }
     object HTTPRequestURL {
         const val default = ""
-        fun retrieve(context: Context): String {
-            val sharedPrefs = context.getSharedPreferences(Settings.javaClass.name, AppCompatActivity.MODE_PRIVATE)
-            return sharedPrefs.getString(this.javaClass.name, default)!!
-        }
     }
     object WhiteListedSSIDs {
         const val default = ""
-        fun retrieve(context: Context): String {
-            val sharedPrefs = context.getSharedPreferences(Settings.javaClass.name, AppCompatActivity.MODE_PRIVATE)
-            return sharedPrefs.getString(this.javaClass.name, default)!!
-        }
     }
 }

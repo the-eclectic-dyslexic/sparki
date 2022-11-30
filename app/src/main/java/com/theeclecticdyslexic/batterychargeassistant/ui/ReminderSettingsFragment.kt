@@ -30,8 +30,8 @@ class ReminderSettingsFragment : Fragment() {
     private fun initNumberPickers() {
         val prefs = requireContext().getSharedPreferences(Settings.javaClass.name, AppCompatActivity.MODE_PRIVATE)
         val reminderFrequency = prefs.getInt(
-            Settings.ReminderFrequency.javaClass.name,
-            Settings.ReminderFrequency.default
+            Settings.ReminderFrequencyMinutes.javaClass.name,
+            Settings.ReminderFrequencyMinutes.default
         )
 
         val tens = reminderFrequency / 10
@@ -57,7 +57,7 @@ class ReminderSettingsFragment : Fragment() {
 
         fun setReminderFrequency(tens: Int, ones: Int) {
             val newValue = 10*tens + ones
-            editor.putInt(Settings.ReminderFrequency.javaClass.name, newValue)
+            editor.putInt(Settings.ReminderFrequencyMinutes.javaClass.name, newValue)
             editor.apply()
         }
 

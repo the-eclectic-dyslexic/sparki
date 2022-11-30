@@ -16,13 +16,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:layout_margin="@dimen/normal_padding"
-                android:text="@string/http_explainer" />
-
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
 
@@ -38,13 +31,6 @@
                     android:hint="@string/http_hint" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/normal_padding"
-                android:textSize="16sp"
-                android:text="@string/ssid_explainer"
-                app:layout_constraintBottom_toTopOf="@+id/textInputLayout2" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -59,6 +45,114 @@
                     android:textColorHint="?attr/colorAccent"
                     android:hint="@string/ssid_hint" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <TableLayout
+                android:id="@+id/entry_table"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TableRow
+                    android:layout_marginBottom="0dp"
+                    android:padding="0dp">
+
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginTop="@dimen/normal_padding"
+                        android:layout_marginStart="@dimen/normal_padding"
+                        android:layout_marginEnd="@dimen/normal_padding"
+                        android:layout_marginBottom="0dp"
+                        android:textSize="20sp"
+                        android:text="@string/ssid"
+                        app:layout_constraintBottom_toTopOf="@+id/textInputLayout2" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="20sp"
+                        android:layout_marginTop="@dimen/normal_padding"
+                        android:layout_marginStart="@dimen/normal_padding"
+                        android:layout_marginEnd="@dimen/normal_padding"
+                        android:layout_marginBottom="0dp"
+                        android:text="@string/url" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/row_0">
+<!--                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/normal_padding"
+                        android:layout_marginEnd="@dimen/normal_padding"
+                        app:tint="?attr/colorOnPrimary"
+                        android:backgroundTint="?attr/colorOnPrimary"
+                        android:layout_weight="0"
+                        android:src="@android:drawable/ic_delete" />-->
+
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/ssidTextInput_0"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/normal_padding"
+                            android:backgroundTint="?attr/colorOnPrimary"
+                            android:textColorHint="?attr/colorAccent"
+                            android:hint="@string/ssid_hint" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/urlTextInput_0"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/normal_padding"
+                            android:backgroundTint="?attr/colorOnPrimary"
+                            android:textColorHint="?attr/colorAccent"
+                            android:hint="@string/http_hint" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </TableRow>
+
+
+            </TableLayout>
+
+            <ImageButton
+                android:id="@+id/addRowButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleX="1.5"
+                android:scaleY="1.5"
+                android:layout_gravity="end"
+                android:layout_marginTop="@dimen/normal_padding"
+                android:layout_marginStart="@dimen/normal_padding"
+                android:layout_marginEnd="@dimen/normal_padding"
+                android:layout_marginBottom="48dp"
+                android:backgroundTint="?attr/colorOnPrimary"
+                app:tint="?attr/colorPrimary"
+                android:src="@android:drawable/ic_input_add"
+                android:contentDescription="@string/http_add_button" />
 
         </LinearLayout>
     </ScrollView>

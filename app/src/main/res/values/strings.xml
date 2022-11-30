@@ -22,13 +22,18 @@
     <string name="action_alarm">Sound Alarm</string>
     <string name="action_http_request">Send HTTP request</string>
 
-    <string name="edit_button_text">edit</string>
-    <string name="ssid_hint">ex: my_WiFi + my_5ghz_WiFi + friend\'s_WiFi</string>
-    <string name="ssid_explainer">List of WiFi network SSIDs (names) separated by plus signs (+), where you want to be able to make your HTTP request. This will prevent you sending requests to unknown or non-existent devices when you are not connected to your home network. It will also stop you sending your request over mobile data. Leaving this unchanged will allow sending your request over any connected network.</string>
+    <string name="edit_reminder_button_text">edit reminder settings</string>
+    <string name="edit_alarm_button_text">edit alarm settings</string>
+    <string name="edit_http_request_button_text">edit HTTP request settings</string>
+    <string name="ssid">ssid</string>
+    <string name="ssid_hint">ex: MyHomeWifi</string>
+    <string name="ssid_explainer">SSID refers to the name of Wifi the network you would be connected to when you finish charging your device. Leaving this blank will allow contacting the associated URL no matter what network you are on… even data</string>
+    <string name="url">url</string>
     <string name="http_hint">ex: http://address/of/smart/plug?turn=off</string>
-    <string name="http_explainer">The URL to contact upon reaching the charge target. Typically this would be used to turn off a {REST} enabled smart plug. Also typically, you would want this to be pointing at the local ip address of the device you want to contact, but you are not restricted to that.</string>
+    <string name="http_explainer">The URL to contact once charging is finished</string>
     <string name="minutes">minutes</string>
-    <string name="reminder_wait_explainer">The number of minutes to wait between giving repeat reminder notifications. Setting this to 0 minutes disables repeat reminders.</string>
+    <string name="reminder_wait_explainer">The number of minutes to wait between giving repeat reminder notifications. Setting this to 0 minutes disables repeat reminders. Leaving this blank will mean this will ignored entirely.</string>
+    <string name="http_add_button">Add another ssid and url</string>
     <!-- Strings used for fragments for navigation -->
 
 </resources>
