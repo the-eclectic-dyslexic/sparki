@@ -7,7 +7,16 @@ import android.content.IntentFilter
 import android.media.AudioAttributes
 import android.media.Ringtone
 import android.media.RingtoneManager
+import android.net.ConnectivityManager
+import android.net.ConnectivityManager.NetworkCallback
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
+import android.net.wifi.WifiInfo
+import android.net.wifi.WifiManager
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.theeclecticdyslexic.batterychargeassistant.misc.*
 import java.util.*
 
@@ -120,7 +129,7 @@ class MainReceiver : BroadcastReceiver() {
         val httpRequestEnabled = Settings.HTTPRequestEnabled.retrieve(context)
         if (httpRequestEnabled) {
             // TODO send httpRequest
-            sendHTTPRequests()
+            sendHTTPRequests(context)
         }
 
         NotificationHelper.cancelControls(context)
@@ -128,8 +137,47 @@ class MainReceiver : BroadcastReceiver() {
         stopBatteryWatcher(context)
     }
 
-    private fun sendHTTPRequests() {
-        Debug.logOverREST(Pair("plug_power", "off"))
+    private fun sendHTTPRequests(context: Context) {
+        val ssid = getNetworkSSID(context)
+        Log.d("checking if ssid is synchronous", ssid ?: "no network found")
+        // TODO filter httprequests looking for that ssid (or blank ssid)
+        // TODO run each remaining request
+    }
+
+    private fun getNetworkSSID(context: Context): String? {
+
+        // TODO there MUST be a better way to do this
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val mgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val request = NetworkRequest.Builder()
+                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                .build()
+            var ssid: String? = null
+
+            @RequiresApi(Build.VERSION_CODES.S)
+            class CallBack : NetworkCallback(FLAG_INCLUDE_LOCATION_INFO) {
+                override fun onAvailable(network: Network) {}
+
+                override fun onCapabilitiesChanged(
+                    network: Network,
+                    capabilities: NetworkCapabilities
+                ) {
+                    Log.d("ssid in callback", (capabilities.transportInfo as WifiInfo).ssid)
+
+                    val info = capabilities.transportInfo
+                    ssid = if (info is WifiInfo) info.ssid else null
+                }
+            }
+
+            val callback = CallBack()
+            mgr.requestNetwork(request, callback)
+            return ssid
+
+        } else {
+
+            val deprecatedMgr = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            return deprecatedMgr.connectionInfo.ssid
+        }
     }
 
     private fun initBroadcastReceivers(context: Context) {
@@ -161,6 +209,9 @@ class MainReceiver : BroadcastReceiver() {
         // TODO show notification, if enabled
         Log.d("Charging State Change", "power connected")
         Debug.logOverREST(Pair("power_connected", true))
+
+        // TODO remove this section
+        sendHTTPRequests(context)
     }
 
     private fun onPowerDisconnected(context: Context) {

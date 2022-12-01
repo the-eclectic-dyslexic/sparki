@@ -30,8 +30,6 @@ object Settings {
             editor.putInt(AlarmTimeoutMinutes.javaClass.name, AlarmTimeoutMinutes.default)
 
             editor.putBoolean(HTTPRequestEnabled.javaClass.name, HTTPRequestEnabled.default)
-            editor.putString(HTTPRequestURL.javaClass.name, HTTPRequestURL.default)
-            editor.putString(WhiteListedSSIDs.javaClass.name, WhiteListedSSIDs.default)
             editor.putString(HTTPRequests.javaClass.name, HTTPRequests.default)
 
             editor.apply()
@@ -119,11 +117,5 @@ object Settings {
             editor.putString(HTTPRequests.javaClass.name, json)
             editor.apply()
         }
-    }
-    object HTTPRequestURL {
-        const val default = ""
-    }
-    object WhiteListedSSIDs {
-        const val default = ""
     }
 }

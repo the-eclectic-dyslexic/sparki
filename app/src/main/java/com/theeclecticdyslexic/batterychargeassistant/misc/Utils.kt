@@ -6,6 +6,7 @@ import android.content.IntentFilter
 import android.os.BatteryManager
 import android.util.Log
 import java.net.HttpURLConnection
+import java.net.Inet4Address
 import java.net.URL
 
 
@@ -48,4 +49,29 @@ object Utils {
                 || Settings.AlarmEnabled.retrieve(context)
     }
 
+    fun sendREST(address: String) {
+
+        val url = URL(address)
+        fun buildRunnable() : Runnable {
+            return Runnable {
+                val connection : HttpURLConnection = url.openConnection() as HttpURLConnection
+                connection.setRequestProperty("User-Agent", "Android Application:")
+                connection.setRequestProperty("Connection", "close")
+                connection.connectTimeout = 1000 * 30
+                try {
+                    connection.connect()
+                    Log.i("response from $url", connection.responseCode.toString())
+                } catch(e : Exception) {
+                    // do nothing
+                    Log.d("exception encountered trying to establish connection ", e.toString())
+                }
+                finally {
+                    connection.disconnect()
+                }
+            }
+        }
+
+        val thread = Thread(buildRunnable())
+        thread.start()
+    }
 }

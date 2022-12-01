@@ -33,7 +33,8 @@
     <string name="http_explainer">The URL to contact once charging is finished</string>
     <string name="minutes">minutes</string>
     <string name="reminder_wait_explainer">The number of minutes to wait between giving repeat reminder notifications. Setting this to 0 minutes disables repeat reminders. Leaving this blank will mean this will ignored entirely.</string>
-    <string name="http_add_button">Add another ssid and url</string>
+    <string name="add_row_button">Add a new row</string>
+    <string name="remove_row_button">Remove this row</string>
     <!-- Strings used for fragments for navigation -->
 
 </resources>

@@ -1,25 +1,22 @@
 package com.theeclecticdyslexic.batterychargeassistant.ui
 
+import android.app.ActionBar.LayoutParams
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
+import android.view.ContextThemeWrapper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TableRow
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.children
-import androidx.core.view.get
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.theeclecticdyslexic.batterychargeassistant.R
 import com.theeclecticdyslexic.batterychargeassistant.misc.Settings
 import com.theeclecticdyslexic.batterychargeassistant.databinding.HttpRequestFragmentBinding
 import com.theeclecticdyslexic.batterychargeassistant.misc.HTTPRequest
-import org.w3c.dom.Text
-import java.util.*
+import kotlin.math.roundToInt
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -38,112 +35,123 @@ class HTTPRequestSettingsFragment : Fragment() {
     ): View? {
         _binding = HttpRequestFragmentBinding.inflate(inflater, container, false)
 
-        initOldTextInputs()
         initTextInputs()
         initAddButton()
 
         return binding.root
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onPause() {
+        super.onPause()
         val entries = buildEntriesFromIds()
-        Log.d("entries: ", entries.toString())
         Settings.HTTPRequests.store(requireContext(), entries)
     }
 
     private fun buildEntriesFromIds() : Array<HTTPRequest> {
+        //TODO add sanitization regex for ssid and urls
+        fun sanitize(text: android.text.Editable?): String {
+            return text.toString().trim()
+        }
+
         return idPairs.map {
             val ssid = binding.entryTable.findViewById<TextInputEditText>(it.ssid)
             val url = binding.entryTable.findViewById<TextInputEditText>(it.url)
-            HTTPRequest(ssid.text.toString(), url.text.toString())
+
+            HTTPRequest(sanitize(ssid.text), sanitize(url.text))
         }.toTypedArray()
-    }
-
-    private fun buildEntries() : Array<HTTPRequest> {
-        val rows = binding.entryTable.children.drop(1) // first row contains only labels
-        val entries = mutableListOf<HTTPRequest>()
-        for (r in rows) {
-            val row = r as TableRow
-            val ssid = extractStringFromTextInputLayout(row[1] as TextInputLayout)
-            val url = extractStringFromTextInputLayout(row[2] as TextInputLayout)
-            val entry = HTTPRequest(ssid, url)
-            Log.d("entry: ", entry.toString())
-            entries.add(HTTPRequest(ssid, url))
-        }
-        return entries.toTypedArray()
-    }
-
-    private fun extractStringFromTextInputLayout(layout: TextInputLayout): String {
-        val editor = layout[0] as TextInputEditText
-        return editor.text.toString()
     }
 
     private fun initTextInputs(){
         val entries = Settings.HTTPRequests.retrieve(requireContext())
 
-        binding.urlTextInput0.setText(entries[0].url)
-        binding.ssidTextInput0.setText(entries[0].ssid)
-        idPairs.add(IDPair(binding.ssidTextInput0.id, binding.urlTextInput0.id))
+        // first entry
+        val first = entries.first()
+        binding.firstUrl.setText(first.url)
+        binding.firstSsid.setText(first.ssid)
+        idPairs.add(IDPair(binding.firstSsid.id, binding.firstUrl.id))
 
-
-        for (entry in entries.drop(1)) {
-            Log.i("trying to render entry:", entry.toString())
-            // TODO build new pair of fields
-        }
+        // remaining entries
+        entries.drop(1).forEach(this::addRow)
     }
 
-    private fun initAddButton() {
-        binding.addRowButton.setOnClickListener {
-            addRow()
-        }
-    }
+    private fun initAddButton() =
+        binding.addRowButton.setOnClickListener { addRow() }
 
-    private fun addRow() : TableRow {
-        val context = requireContext()
+    private fun addRow(entry: HTTPRequest = HTTPRequest.EMPTY_OBJECT) : TableRow {
         val row = TableRow(context)
-        val btn = ImageButton(context)
-        val ssid = TextInputEditText(context)
-        val url = TextInputEditText(context)
+
+        val (ssid, ssidContainer) = createTextInput(entry.ssid, R.style.Theme_BatteryChargeAssistant_SSIDEditor)
+        val (url,  urlContainer)  = createTextInput(entry.url, R.style.Theme_BatteryChargeAssistant_URLEditor)
+
+        val pair = IDPair(ssid, url)
+        idPairs.add(pair)
+
+        val btn = createButton(pair)
+
         row.addView(btn)
-        row.addView(ssid)
-        row.addView(url)
+        row.addView(ssidContainer)
+        row.addView(urlContainer)
 
         binding.entryTable.addView(row)
         return row
     }
 
-    private fun initOldTextInputs() {
-        val prefs = requireContext().getSharedPreferences(Settings.javaClass.name, AppCompatActivity.MODE_PRIVATE)
-        val url = prefs.getString(
-            Settings.HTTPRequestURL.javaClass.name,
-            Settings.HTTPRequestURL.default
+    private fun createButton(pair: IDPair): ImageButton {
+        val margin = dp(16)
+        val btnWrapper = ContextThemeWrapper(context, R.style.Theme_BatteryChargeAssistant_RemoveRowButton)
+        val btnParams = TableRow.LayoutParams(
+            LayoutParams.WRAP_CONTENT,
+            LayoutParams.WRAP_CONTENT,
+            0f)
+        btnParams.setMargins(margin, margin, 0, margin)
+        val btn = ImageButton(btnWrapper)
+        btn.layoutParams = btnParams
+
+        btn.setOnClickListener {
+            removeThisRow(it, pair)
+        }
+
+        return btn
+    }
+
+    private fun removeThisRow(view: View, idPair: IDPair) {
+        val index = idPairs.indexOf(idPair)
+        idPairs.removeAt(index)
+
+        val parent = view.parent as View
+        val grandparent = parent.parent as ViewGroup
+        grandparent.removeView(parent)
+    }
+
+    private fun createTextInput(initText: String, style: Int) : Pair<Int, TextInputLayout>{
+        val margin = dp(16)
+
+        val containerParams = TableRow.LayoutParams(
+            0,
+            LayoutParams.WRAP_CONTENT,
+        1f)
+        val containerWrapper = ContextThemeWrapper(context, R.style.Theme_BatteryChargeAssistant_EditorContainer)
+        val container = TextInputLayout(containerWrapper)
+        container.layoutParams = containerParams
+
+        val editorParams = LinearLayout.LayoutParams(
+            LayoutParams.MATCH_PARENT,
+            LayoutParams.WRAP_CONTENT
         )
-        val ssids = prefs.getString(
-            Settings.WhiteListedSSIDs.javaClass.name,
-            Settings.HTTPRequestURL.default
-        )
+        editorParams.setMargins(margin, margin, margin, margin)
+        val editorWrapper = ContextThemeWrapper(context, R.style.Theme_BatteryChargeAssistant_Editor)
+        val editor = TextInputEditText(editorWrapper)
+        editor.layoutParams = editorParams
+        editor.setText(initText)
+        editor.id = View.generateViewId()
 
-        binding.urlTextInput.setText(url)
-        binding.ssidsTextInput.setText(ssids)
+        container.addView(editor)
 
-        val editor = prefs.edit()
-        binding.urlTextInput.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {}
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                editor.putString(Settings.HTTPRequestURL.javaClass.name, s.toString().trim())
-                editor.apply()
-            }
-        })
+        return Pair(editor.id, container)
+    }
 
-        binding.ssidsTextInput.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {}
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                editor.putString(Settings.WhiteListedSSIDs.javaClass.name, s.toString().trim())
-                editor.apply()
-            }
-        })
+    private fun dp(i: Int): Int {
+        val factor = requireContext().resources.displayMetrics.density
+        return (i*factor).roundToInt()
     }
 }
