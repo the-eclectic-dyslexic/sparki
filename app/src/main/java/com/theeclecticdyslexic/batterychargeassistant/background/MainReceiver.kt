@@ -1,5 +1,7 @@
 package com.theeclecticdyslexic.batterychargeassistant.background
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -15,17 +17,14 @@ import android.net.NetworkRequest
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.os.Build
+import android.os.SystemClock
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.theeclecticdyslexic.batterychargeassistant.misc.*
 import java.util.*
 
 
-class MainReceiver : BroadcastReceiver() {
-
-    companion object {
-        val SINGLETON = MainReceiver()
-    }
+object MainReceiver : BroadcastReceiver() {
 
     private var batteryMeasurements: TreeMap<Long, Float> = TreeMap()
     private var lastPercent = -1f
@@ -40,16 +39,16 @@ class MainReceiver : BroadcastReceiver() {
     )
 
     fun beginReceiving(context: Context) {
+        initRinger(context)
         initBroadcastReceivers(context)
         if (Utils.isPlugged(context)) {
             onPowerConnected(context)
         }
-        initRinger(context)
     }
 
     fun stopReceiving(context: Context) {
         try {
-            context.unregisterReceiver(SINGLETON)
+            context.unregisterReceiver(this)
         } catch (e: Exception) {
             Log.d("Exception Occurred", "While trying to destroy service $e")
         }
@@ -62,15 +61,16 @@ class MainReceiver : BroadcastReceiver() {
     }
 
     override fun onReceive(context: Context, intent: Intent) {
+        // TODO this shouldn't be necessary, make sure that all broadcasts are sent to the singleton
         when (intent.action) {
-            Intent.ACTION_POWER_CONNECTED -> SINGLETON.onPowerConnected(context)
+            Intent.ACTION_POWER_CONNECTED -> onPowerConnected(context)
 
             Intent.ACTION_POWER_DISCONNECTED,
-            Action.OVERRIDE_WATCHDOG.id -> SINGLETON.onPowerDisconnected(context)
+            Action.OVERRIDE_WATCHDOG.id -> onPowerDisconnected(context)
 
-            Intent.ACTION_BATTERY_CHANGED -> SINGLETON.handleChargePercent(context)
+            Intent.ACTION_BATTERY_CHANGED -> handleChargePercent(context)
 
-            Action.STOP_ALARM.id -> playRinger()
+            Action.STOP_ALARM.id -> stopRinger()
 
             else -> Log.d("battery watcher received unhandled intent:","${intent.action}")
         }
@@ -86,9 +86,30 @@ class MainReceiver : BroadcastReceiver() {
                 .build()
     }
 
-    private fun playRinger() {
+    private fun playRinger(context: Context) {
         Debug.logOverREST(Pair("alarm", "starting"))
+        initRinger(context)
         ringer.play()
+
+        val timeout = Settings.AlarmTimeoutMinutes.retrieve(context)
+        Log.d("timeout", timeout.toString())
+        if (timeout <= 0) return
+
+        val intentStopRinging = Intent(Action.STOP_ALARM.id)
+        val pi = PendingIntent.getBroadcast(
+            context,
+            0,
+            intentStopRinging,
+            PendingIntent.FLAG_IMMUTABLE)
+
+        val mgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val millis = 1000
+        val seconds = 60
+        mgr.setExact(
+            AlarmManager.RTC_WAKEUP,
+            System.currentTimeMillis() + timeout * seconds * millis,
+            //System.currentTimeMillis() + timeout * millis,
+            pi)
     }
 
     private fun stopRinger() {
@@ -117,20 +138,13 @@ class MainReceiver : BroadcastReceiver() {
 
     private fun handleFullyCharged(context: Context) {
         val reminderEnabled = Settings.ReminderEnabled.retrieve(context)
-        if (reminderEnabled) {
-            NotificationHelper.pushReminder(context)
-        }
+        if (reminderEnabled) NotificationHelper.pushReminder(context)
 
         val alarmEnabled = Settings.AlarmEnabled.retrieve(context)
-        if (alarmEnabled) {
-            playRinger()
-        }
+        if (alarmEnabled) playRinger(context)
 
         val httpRequestEnabled = Settings.HTTPRequestEnabled.retrieve(context)
-        if (httpRequestEnabled) {
-            // TODO send httpRequest
-            sendHTTPRequests(context)
-        }
+        if (httpRequestEnabled) sendHTTPRequests(context)
 
         NotificationHelper.cancelControls(context)
 
@@ -138,46 +152,51 @@ class MainReceiver : BroadcastReceiver() {
     }
 
     private fun sendHTTPRequests(context: Context) {
-        val ssid = getNetworkSSID(context)
-        Log.d("checking if ssid is synchronous", ssid ?: "no network found")
-        // TODO filter httprequests looking for that ssid (or blank ssid)
-        // TODO run each remaining request
+        val ssid =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) getNetworkSSID(context)
+            else deprecatedGetNetworkSSID(context)
+
+        Log.d("checking if ssid is assigned synchronously", ssid)
+
+        val sanitized = Utils.sanitizeSSID(ssid)
+        val options = listOf(sanitized, "")
+        val requests = Settings.HTTPRequests.retrieve(context)
+
+        requests.filter { it.ssid in options }
+                .filter { it.url != "" }
+                .map { it.url }
+                .forEach(Utils::sendREST)
     }
 
-    private fun getNetworkSSID(context: Context): String? {
-
+    @RequiresApi(Build.VERSION_CODES.S)
+    private fun getNetworkSSID(context: Context): String {
         // TODO there MUST be a better way to do this
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val mgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val request = NetworkRequest.Builder()
-                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-                .build()
-            var ssid: String? = null
+        // TODO test on android S device
+        val mgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val request = NetworkRequest.Builder()
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .build()
+        var ssid = ""
 
-            @RequiresApi(Build.VERSION_CODES.S)
-            class CallBack : NetworkCallback(FLAG_INCLUDE_LOCATION_INFO) {
-                override fun onAvailable(network: Network) {}
+        val callback = object : NetworkCallback(FLAG_INCLUDE_LOCATION_INFO) {
+            override fun onCapabilitiesChanged(
+                network: Network,
+                capabilities: NetworkCapabilities
+            ) {
+                Log.d("ssid in callback", (capabilities.transportInfo as WifiInfo).ssid)
 
-                override fun onCapabilitiesChanged(
-                    network: Network,
-                    capabilities: NetworkCapabilities
-                ) {
-                    Log.d("ssid in callback", (capabilities.transportInfo as WifiInfo).ssid)
-
-                    val info = capabilities.transportInfo
-                    ssid = if (info is WifiInfo) info.ssid else null
-                }
+                val info = capabilities.transportInfo
+                ssid = if (info is WifiInfo) info.ssid else ""
             }
-
-            val callback = CallBack()
-            mgr.requestNetwork(request, callback)
-            return ssid
-
-        } else {
-
-            val deprecatedMgr = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
-            return deprecatedMgr.connectionInfo.ssid
         }
+
+        mgr.requestNetwork(request, callback)
+        return ssid
+    }
+
+    private fun deprecatedGetNetworkSSID(context: Context): String {
+        val deprecatedMgr = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        return deprecatedMgr.connectionInfo.ssid
     }
 
     private fun initBroadcastReceivers(context: Context) {
@@ -185,7 +204,7 @@ class MainReceiver : BroadcastReceiver() {
         try {
             val intents = alwaysReceiving
             for (i in intents) {
-                context.applicationContext.registerReceiver(SINGLETON, IntentFilter(i))
+                context.applicationContext.registerReceiver(this, IntentFilter(i))
             }
 
             Log.d("registering receivers", "completed")
@@ -206,12 +225,8 @@ class MainReceiver : BroadcastReceiver() {
             NotificationHelper.pushControls(context)
         }
 
-        // TODO show notification, if enabled
         Log.d("Charging State Change", "power connected")
         Debug.logOverREST(Pair("power_connected", true))
-
-        // TODO remove this section
-        sendHTTPRequests(context)
     }
 
     private fun onPowerDisconnected(context: Context) {
@@ -226,7 +241,7 @@ class MainReceiver : BroadcastReceiver() {
 
     private fun stopBatteryWatcher(context: Context) {
         try {
-            context.unregisterReceiver(SINGLETON)
+            context.unregisterReceiver(this)
         } catch (e: Exception) {
             Log.d("failed to unregister receivers","$e")
         }
@@ -236,7 +251,7 @@ class MainReceiver : BroadcastReceiver() {
     private fun startBatteryWatcher(context: Context) {
         try {
             context.registerReceiver(
-                SINGLETON,
+                this,
                 IntentFilter(Intent.ACTION_BATTERY_CHANGED))
             resetBatteryMeasurements(context)
         } catch (e : Exception) {

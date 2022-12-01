@@ -6,7 +6,6 @@ import android.content.IntentFilter
 import android.os.BatteryManager
 import android.util.Log
 import java.net.HttpURLConnection
-import java.net.Inet4Address
 import java.net.URL
 
 
@@ -48,6 +47,21 @@ object Utils {
                 || Settings.ReminderEnabled.retrieve(context)
                 || Settings.AlarmEnabled.retrieve(context)
     }
+
+    fun sanitizeSSID(ssid: String): String {
+        // source for valid SSID names
+        // https://community.cisco.com/t5/wireless-mobility-knowledge-base/characteristics-of-ssids/ta-p/3131765
+        val validAnywhere = { c: Char -> c !in "+]/\"\t" }
+        val invalidStart  = { c: Char -> c  in "!#;" }
+        val invalidEnd    = { c: Char -> c  == ' ' }
+
+        return ssid
+            .filter(validAnywhere)
+            .dropWhile(invalidStart)
+            .dropLastWhile(invalidEnd)
+    }
+
+
 
     fun sendREST(address: String) {
 

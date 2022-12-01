@@ -32,7 +32,7 @@ class BackgroundService : Service() {
         val enabled = Settings.Enabled.retrieve(this)
         try {
             if (enabled) {
-                MainReceiver.SINGLETON.beginReceiving(this)
+                MainReceiver.beginReceiving(this)
             }
         } catch (e : Exception) {
             Log.d("Exception Occurred", "While trying to start service $e")
@@ -46,7 +46,7 @@ class BackgroundService : Service() {
 
     override fun onDestroy() {
         Debug.logOverREST(Pair("stopping_service", true))
-        MainReceiver.SINGLETON.stopReceiving(this)
+        MainReceiver.stopReceiving(this)
 
         running = false
     }

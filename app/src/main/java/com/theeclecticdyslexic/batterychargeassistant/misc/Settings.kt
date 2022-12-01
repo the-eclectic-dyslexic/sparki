@@ -1,6 +1,7 @@
 package com.theeclecticdyslexic.batterychargeassistant.misc
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
@@ -8,7 +9,7 @@ import com.google.gson.Gson
 object Settings {
 
     fun initSharedPreferences(context: Context) {
-        val sharedPrefs = context.getSharedPreferences(javaClass.name, AppCompatActivity.MODE_PRIVATE)
+        val sharedPrefs = getPrefs(context)
 
         // true is used instead of the default value here because if the app has never been opened
         // (the key for "ResetDefaults" is not present) we want to set all the settings to default
@@ -42,61 +43,67 @@ object Settings {
 
     object Enabled {
         const val default = false
-        fun retrieve(context: Context): Boolean {
-            val sharedPrefs = context.getSharedPreferences(Settings.javaClass.name, AppCompatActivity.MODE_PRIVATE)
-            return sharedPrefs.getBoolean(this.javaClass.name, default)
-        }
+        fun retrieve(context: Context) =
+            getPrefs(context).getBoolean(this.javaClass.name, this.default)
     }
     object ControlsEnabled {
         const val default = false
-        fun retrieve(context: Context): Boolean {
-            val sharedPrefs = context.getSharedPreferences(Settings.javaClass.name, AppCompatActivity.MODE_PRIVATE)
-            return sharedPrefs.getBoolean(this.javaClass.name, default)
-        }
+        fun retrieve(context: Context) =
+            getPrefs(context).getBoolean(this.javaClass.name, this.default)
+
     }
     object ChargeTarget {
         const val default = 80
-        fun retrieve(context: Context): Int {
-            val sharedPrefs = context.getSharedPreferences(Settings.javaClass.name, AppCompatActivity.MODE_PRIVATE)
-            return sharedPrefs.getInt(this.javaClass.name, default)
-        }
+        fun retrieve(context: Context) =
+            getPrefs(context).getInt(this.javaClass.name, this.default)
+
     }
     object ReminderEnabled {
         const val default = false
-        fun retrieve(context: Context): Boolean {
-            val sharedPrefs = context.getSharedPreferences(Settings.javaClass.name, AppCompatActivity.MODE_PRIVATE)
-            return sharedPrefs.getBoolean(this.javaClass.name, default)
-        }
+        fun retrieve(context: Context) =
+            getPrefs(context).getBoolean(this.javaClass.name, this.default)
+
     }
     object ReminderFrequencyMinutes {
         const val default = 0
-        fun retrieve(context: Context): Int {
-            val sharedPrefs = context.getSharedPreferences(Settings.javaClass.name, AppCompatActivity.MODE_PRIVATE)
-            return sharedPrefs.getInt(this.javaClass.name, default)
-        }
     }
     object AlarmEnabled {
         const val default = false
-        fun retrieve(context: Context): Boolean {
-            val sharedPrefs = context.getSharedPreferences(Settings.javaClass.name, AppCompatActivity.MODE_PRIVATE)
-            return sharedPrefs.getBoolean(this.javaClass.name, default)
-        }
+        fun retrieve(context: Context) =
+            getPrefs(context).getBoolean(this.javaClass.name, this.default)
+
     }
     object AlarmIgnoresSilent {
         const val default = true
+        fun retrieve(context: Context) =
+            getPrefs(context).getBoolean(this.javaClass.name, this.default)
+        fun store(context: Context, setting: Boolean) =
+            getPrefs(context).edit()
+                .putBoolean(this.javaClass.name, setting)
+                .apply()
     }
     object AlarmVibrates {
         const val default = false
+        fun retrieve(context: Context) =
+            getPrefs(context).getBoolean(this.javaClass.name, this.default)
+        fun store(context: Context, setting: Boolean) =
+            getPrefs(context).edit()
+                .putBoolean(this.javaClass.name, setting)
+                .apply()
     }
     object AlarmTimeoutMinutes {
         const val default = 2
+        fun retrieve(context: Context) =
+            getPrefs(context).getInt(this.javaClass.name, this.default)
+        fun store(context: Context, setting: Int) =
+            getPrefs(context).edit()
+                .putInt(this.javaClass.name, setting)
+                .apply()
     }
     object HTTPRequestEnabled {
         const val default = false
-        fun retrieve(context: Context): Boolean {
-            val sharedPrefs = context.getSharedPreferences(Settings.javaClass.name, AppCompatActivity.MODE_PRIVATE)
-            return sharedPrefs.getBoolean(this.javaClass.name, default)
-        }
+        fun retrieve(context: Context) =
+            getPrefs(context).getBoolean(this.javaClass.name, this.default)
     }
     object HTTPRequests {
         val default : String by lazy {
@@ -104,18 +111,22 @@ object Settings {
             Gson().toJson(defaultArray)
         }
         fun retrieve(context: Context): Array<HTTPRequest> {
-            val sharedPrefs = context.getSharedPreferences(Settings.javaClass.name, AppCompatActivity.MODE_PRIVATE)
-            val json = sharedPrefs.getString(this.javaClass.name, default)!!
+            val json = getPrefs(context).getString(this.javaClass.name, this.default)
             return Gson().fromJson(json, Array<HTTPRequest>::class.java)
         }
         fun store(context: Context, entries: Array<HTTPRequest>) {
             val json = Gson().toJson(entries)
 
-            val sharedPrefs = context.getSharedPreferences(Settings.javaClass.name, AppCompatActivity.MODE_PRIVATE)
-            val editor = sharedPrefs.edit()
+            val editor = getPrefs(context).edit()
 
             editor.putString(HTTPRequests.javaClass.name, json)
             editor.apply()
         }
     }
+
+    private fun getPrefs(context: Context) =
+        context.getSharedPreferences(
+            Settings.javaClass.name,
+            AppCompatActivity.MODE_PRIVATE)
+
 }

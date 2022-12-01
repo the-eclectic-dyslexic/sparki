@@ -16,6 +16,7 @@ import com.theeclecticdyslexic.batterychargeassistant.R
 import com.theeclecticdyslexic.batterychargeassistant.misc.Settings
 import com.theeclecticdyslexic.batterychargeassistant.databinding.HttpRequestFragmentBinding
 import com.theeclecticdyslexic.batterychargeassistant.misc.HTTPRequest
+import com.theeclecticdyslexic.batterychargeassistant.misc.Utils
 import kotlin.math.roundToInt
 
 /**
@@ -49,15 +50,14 @@ class HTTPRequestSettingsFragment : Fragment() {
 
     private fun buildEntriesFromIds() : Array<HTTPRequest> {
         //TODO add sanitization regex for ssid and urls
-        fun sanitize(text: android.text.Editable?): String {
-            return text.toString().trim()
-        }
 
         return idPairs.map {
             val ssid = binding.entryTable.findViewById<TextInputEditText>(it.ssid)
             val url = binding.entryTable.findViewById<TextInputEditText>(it.url)
 
-            HTTPRequest(sanitize(ssid.text), sanitize(url.text))
+            val saneSSID = Utils.sanitizeSSID(ssid.text.toString())
+
+            HTTPRequest(saneSSID, url.text.toString())
         }.toTypedArray()
     }
 

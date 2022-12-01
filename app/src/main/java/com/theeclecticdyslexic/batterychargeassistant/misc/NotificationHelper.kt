@@ -60,8 +60,7 @@ object NotificationHelper {
             PendingIntent.FLAG_IMMUTABLE)
 
         // TODO put the correct pending intent in here so that the intent can be grabbed
-        val intentDisableWatcher = Intent(context, MainReceiver::class.java)
-            .apply { action = Action.OVERRIDE_WATCHDOG.id }
+        val intentDisableWatcher = Intent(Action.OVERRIDE_WATCHDOG.id)
         val piDisableWatcher = PendingIntent.getBroadcast(
             context,
             0,
