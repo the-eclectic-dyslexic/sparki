@@ -20,7 +20,7 @@
     <string name="actions_on_charge">What To Do Once Charged</string>
     <string name="action_reminder">Send Reminder(s)</string>
     <string name="action_alarm">Sound Alarm</string>
-    <string name="action_http_request">Send HTTP request</string>
+    <string name="action_http_request">Send HTTP request(s)</string>
 
     <string name="edit_reminder_button_text">edit reminder settings</string>
     <string name="edit_alarm_button_text">edit alarm settings</string>
@@ -32,9 +32,14 @@
     <string name="http_hint">ex: http://address/of/smart/plug?turn=off</string>
     <string name="http_explainer">The URL to contact once charging is finished</string>
     <string name="minutes">minutes</string>
-    <string name="reminder_wait_explainer">The number of minutes to wait between giving repeat reminder notifications. Setting this to 0 minutes disables repeat reminders. Leaving this blank will mean this will ignored entirely.</string>
+    <string name="reminder_wait_explainer">Time to wait before sending repeat reminders. 00 minutes will mean no repeat reminders are sent.</string>
+    <string name="alarm_timeout_explainer">Time until alarm turns off on its own. 00 minutes will mean the alarm does not timeout.</string>
     <string name="add_row_button">Add a new row</string>
     <string name="remove_row_button">Remove this row</string>
+
+    <string name="ignore_silent">Alarm ignores silent</string>
+    <string name="vibrate">Alarm also vibrates</string>
+    <string name="timeout_after">Timeout after</string>
     <!-- Strings used for fragments for navigation -->
 
 </resources>

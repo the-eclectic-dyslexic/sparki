@@ -27,7 +27,7 @@ class BackgroundService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
 
-        Debug.logOverREST(Pair("starting_service", true))
+        Debug.logOverHTTP(Pair("starting_service", true))
 
         val enabled = Settings.Enabled.retrieve(this)
         try {
@@ -45,7 +45,7 @@ class BackgroundService : Service() {
     }
 
     override fun onDestroy() {
-        Debug.logOverREST(Pair("stopping_service", true))
+        Debug.logOverHTTP(Pair("stopping_service", true))
         MainReceiver.stopReceiving(this)
 
         running = false

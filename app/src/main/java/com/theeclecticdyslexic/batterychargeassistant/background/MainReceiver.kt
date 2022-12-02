@@ -17,7 +17,6 @@ import android.net.NetworkRequest
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.os.Build
-import android.os.SystemClock
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.theeclecticdyslexic.batterychargeassistant.misc.*
@@ -87,7 +86,7 @@ object MainReceiver : BroadcastReceiver() {
     }
 
     private fun playRinger(context: Context) {
-        Debug.logOverREST(Pair("alarm", "starting"))
+        Debug.logOverHTTP(Pair("alarm", "starting"))
         initRinger(context)
         ringer.play()
 
@@ -113,7 +112,7 @@ object MainReceiver : BroadcastReceiver() {
     }
 
     private fun stopRinger() {
-        Debug.logOverREST(Pair("alarm", "stopping"))
+        Debug.logOverHTTP(Pair("alarm", "stopping"))
         ringer.stop()
     }
 
@@ -133,7 +132,7 @@ object MainReceiver : BroadcastReceiver() {
         lastPercent = percent
         val time = System.currentTimeMillis()
         batteryMeasurements[time] = percent
-        Debug.logOverREST(Pair("time", time), Pair("percent", percent))
+        Debug.logOverHTTP(Pair("time", time), Pair("percent", percent))
     }
 
     private fun handleFullyCharged(context: Context) {
@@ -226,7 +225,7 @@ object MainReceiver : BroadcastReceiver() {
         }
 
         Log.d("Charging State Change", "power connected")
-        Debug.logOverREST(Pair("power_connected", true))
+        Debug.logOverHTTP(Pair("power_connected", true))
     }
 
     private fun onPowerDisconnected(context: Context) {
@@ -236,7 +235,7 @@ object MainReceiver : BroadcastReceiver() {
         NotificationHelper.cancelControls(context)
         stopRinger()
         Log.d("Charging State Change", "power disconnected")
-        Debug.logOverREST(Pair("power_connected", false))
+        Debug.logOverHTTP(Pair("power_connected", false))
     }
 
     private fun stopBatteryWatcher(context: Context) {

@@ -17,23 +17,27 @@
         <action
             android:id="@+id/action_SettingsFragment_to_HTTPRequestSettingsFragment"
             app:destination="@id/HTTPRequestSettingsFragment" />
+        <action
+            android:id="@+id/action_SettingsFragment_to_AlarmSettingsFragment"
+            app:destination="@id/AlarmSettingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/HTTPRequestSettingsFragment"
         android:name="com.theeclecticdyslexic.batterychargeassistant.ui.HTTPRequestSettingsFragment"
         android:label="@string/http_request_fragment_label"
         tools:layout="@layout/http_request_fragment">
-
-        <!--        <action-->
-        <!--            android:id="@+id/action_SecondFragment_to_FirstFragment"-->
-        <!--            app:destination="@id/SettingsFragment" />-->
     </fragment>
     <fragment
         android:id="@+id/ReminderSettingFragment"
         android:name="com.theeclecticdyslexic.batterychargeassistant.ui.ReminderSettingsFragment"
         android:label="@string/reminder_fragment_label"
         tools:layout="@layout/reminder_settings_fragment">
-        android:id="@+id/ReminderSettingsFragment"
-        android:name"com.theeclecticdyslexic.batterychargeassistant.ReminderSettingsFragment"
     </fragment>
+    <fragment
+        android:id="@+id/AlarmSettingsFragment"
+        android:name="com.theeclecticdyslexic.batterychargeassistant.ui.AlarmSettingsFragment"
+        android:label="Alarm Settings"
+        tools:layout="@layout/alarm_settings_fragment">
+    </fragment>
+
 </navigation>

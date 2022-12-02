@@ -69,6 +69,9 @@ class SettingsFragment : Fragment() {
         binding.buttonHttpRequestSettings.setOnClickListener{
                 _ -> findNavController().navigate(R.id.HTTPRequestSettingsFragment)
         }
+        binding.buttonAlarmSettings.setOnClickListener{
+                _ -> findNavController().navigate(R.id.AlarmSettingsFragment)
+        }
         binding.buttonReminderSettings.setOnClickListener{
                 _ -> findNavController().navigate(R.id.ReminderSettingFragment)
         }

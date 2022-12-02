@@ -61,8 +61,6 @@ object Utils {
             .dropLastWhile(invalidEnd)
     }
 
-
-
     fun sendREST(address: String) {
 
         val url = URL(address)
