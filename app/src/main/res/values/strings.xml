@@ -12,14 +12,14 @@
     <!-- Strings used for the settings page -->
     <string name="general_settings">General Settings</string>
 
-    <string name="enable_assistant">Enable This App</string>
+    <string name="enable_assistant">Put Sparki to work</string>
     <string name="enable_notification_controls">Show In-Notification Controls</string>
-    <string name="target_battery_charge_level">"Charge Target "</string>
+    <string name="target_battery_charge_level">Charge Target</string>
     <string name="change_target_battery_charge_level">%1$d%%</string>
 
-    <string name="actions_on_charge">What To Do Once Charged</string>
+    <string name="actions_on_charge">What Sparki should do when the battery is charged</string>
     <string name="action_reminder">Send Reminder(s)</string>
-    <string name="action_alarm">Sound Alarm</string>
+    <string name="action_alarm">Sound an Alarm</string>
     <string name="action_http_request">Send HTTP request(s)</string>
 
     <string name="edit_reminder_button_text">edit reminder settings</string>
@@ -27,19 +27,20 @@
     <string name="edit_http_request_button_text">edit HTTP request settings</string>
     <string name="ssid">ssid</string>
     <string name="ssid_hint">ex: MyHomeWifi</string>
-    <string name="ssid_explainer">SSID refers to the name of Wifi the network you would be connected to when you finish charging your device. Leaving this blank will allow contacting the associated URL no matter what network you are on… even data</string>
+    <string name="ssid_explainer"><b>SSID</b> is the name of the Wifi network your device will be on while charging.\n\nLeaving this blank will let Sparki message the associated <b>URL</b> no matter what WiFi network your device is on… even over data.\n\n<i>Leaving SSID blank is not recommended, as Sparki might message devices you didn\'t intend him to.</i></string>
     <string name="url">url</string>
-    <string name="http_hint">ex: http://address/of/smart/plug?turn=off</string>
-    <string name="http_explainer">The URL to contact once charging is finished</string>
+    <string name="http_hint">ex: http://address/of/your/smart/plug?power=off</string>
     <string name="minutes">minutes</string>
-    <string name="reminder_wait_explainer">Time to wait before sending repeat reminders. 00 minutes will mean no repeat reminders are sent.</string>
-    <string name="alarm_timeout_explainer">Time until alarm turns off on its own. 00 minutes will mean the alarm does not timeout.</string>
+    <string name="reminder_wait_explainer">Time to wait before Sparki sends repeat reminders.\n\nA setting of <b>00</b> minutes will mean no repeat reminders are sent.</string>
+    <string name="alarm_timeout_explainer">Time until Sparki turns off the alarm, without power being disconnected.\n\nA setting of <b>00</b> minutes will mean the alarm does not timeout.</string>
     <string name="add_row_button">Add a new row</string>
     <string name="remove_row_button">Remove this row</string>
 
     <string name="ignore_silent">Alarm ignores silent</string>
     <string name="vibrate">Alarm also vibrates</string>
-    <string name="timeout_after">Timeout after</string>
-    <!-- Strings used for fragments for navigation -->
+    <string name="timeout_after">Alarm will timeout after</string>
+    <string name="repeat_reminders">Send repeat reminders every</string>
+    <string name="take_me_to_the_optimizer">Take Me To The Optimizer Settings</string>
+    <string name="battery_optimizer_explanation">Sometimes Sparki will be prevented from running in the background by your device. If you are having trouble, either with Sparki not reminding you when the battery is charged or Sparki not properly starting when you reboot your device, first take a look at the battery optimizer and make sure Sparki is not being optimized.\n\n<i>Don\'t worry too much about the battery life impact; Sparki doesn\'t work too hard and when he does it\'s almost exclusively while the battery is charging.</i></string>
 
 </resources>

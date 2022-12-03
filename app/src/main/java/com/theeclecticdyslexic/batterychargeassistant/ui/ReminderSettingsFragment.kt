@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.theeclecticdyslexic.batterychargeassistant.misc.Settings
 import com.theeclecticdyslexic.batterychargeassistant.databinding.ReminderSettingsFragmentBinding
 
+
 class ReminderSettingsFragment : Fragment() {
 
     private var _binding : ReminderSettingsFragmentBinding? = null
@@ -28,17 +29,13 @@ class ReminderSettingsFragment : Fragment() {
     }
 
     private fun initNumberPickers() {
-        val prefs = requireContext().getSharedPreferences(Settings.javaClass.name, AppCompatActivity.MODE_PRIVATE)
-        val reminderFrequency = prefs.getInt(
-            Settings.ReminderFrequencyMinutes.javaClass.name,
-            Settings.ReminderFrequencyMinutes.default
-        )
+        val reminderFrequency = Settings.ReminderFrequencyMinutes.retrieve(requireContext())
 
         val tens = reminderFrequency / 10
         val ones = reminderFrequency % 10
 
-        initPicker(binding.reminderIntervalPickerTens, tens)
-        initPicker(binding.reminderIntervalPickerOnes, ones)
+        initPicker(binding.intervalPickerTens, tens)
+        initPicker(binding.intervalPickerOnes, ones)
 
         listenToNumberPickers()
     }
@@ -52,25 +49,22 @@ class ReminderSettingsFragment : Fragment() {
     }
 
     private fun listenToNumberPickers() {
-        val prefs = requireContext().getSharedPreferences(Settings.javaClass.name, AppCompatActivity.MODE_PRIVATE)
-        val editor = prefs.edit()
 
         fun setReminderFrequency(tens: Int, ones: Int) {
             val newValue = 10*tens + ones
-            editor.putInt(Settings.ReminderFrequencyMinutes.javaClass.name, newValue)
-            editor.apply()
+            Settings.ReminderFrequencyMinutes.store(requireContext(), newValue)
         }
 
-        binding.reminderIntervalPickerTens.setOnValueChangedListener {
+        binding.intervalPickerTens.setOnValueChangedListener {
             _, _, tens ->
-            val ones = binding.reminderIntervalPickerOnes.value
+            val ones = binding.intervalPickerOnes.value
 
             setReminderFrequency(tens, ones)
         }
 
-        binding.reminderIntervalPickerOnes.setOnValueChangedListener {
+        binding.intervalPickerOnes.setOnValueChangedListener {
             _, _, ones ->
-            val tens = binding.reminderIntervalPickerTens.value
+            val tens = binding.intervalPickerTens.value
 
             setReminderFrequency(tens, ones)
         }

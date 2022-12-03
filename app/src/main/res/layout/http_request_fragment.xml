@@ -16,6 +16,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/normal_padding"
+                android:textSize="16sp"
+                android:text="@string/ssid_explainer"/>
+
             <TableLayout
                 android:id="@+id/entry_table"
                 android:layout_width="match_parent"

@@ -1,8 +1,6 @@
 package com.theeclecticdyslexic.batterychargeassistant.misc
 
 import android.content.Context
-import android.content.SharedPreferences
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 
@@ -11,35 +9,32 @@ object Settings {
     fun initSharedPreferences(context: Context) {
         val sharedPrefs = getPrefs(context)
 
-        // true is used instead of the default value here because if the app has never been opened
-        // (the key for "ResetDefaults" is not present) we want to set all the settings to default
-        if (sharedPrefs.getBoolean(ResetDefaults.javaClass.name, true)) {
-            val editor = sharedPrefs.edit()
+        val initialized = sharedPrefs.getBoolean(SettingsInitialized.javaClass.name, false)
+        if (initialized) return
 
-            editor.putBoolean(ResetDefaults.javaClass.name, ResetDefaults.default)
+        val editor = sharedPrefs.edit()
 
-            editor.putBoolean(Enabled.javaClass.name, Enabled.default)
-            editor.putBoolean(ControlsEnabled.javaClass.name, ControlsEnabled.default)
-            editor.putInt(ChargeTarget.javaClass.name, ChargeTarget.default)
+        editor.putBoolean(SettingsInitialized.javaClass.name, true)
 
-            editor.putBoolean(ReminderEnabled.javaClass.name, ReminderEnabled.default)
-            editor.putInt(ReminderFrequencyMinutes.javaClass.name, ReminderFrequencyMinutes.default)
+        editor.putBoolean(Enabled.javaClass.name, Enabled.default)
+        editor.putBoolean(ControlsEnabled.javaClass.name, ControlsEnabled.default)
+        editor.putInt(ChargeTarget.javaClass.name, ChargeTarget.default)
 
-            editor.putBoolean(AlarmEnabled.javaClass.name, AlarmEnabled.default)
-            editor.putBoolean(AlarmIgnoresSilent.javaClass.name, AlarmIgnoresSilent.default)
-            editor.putBoolean(AlarmVibrates.javaClass.name, AlarmVibrates.default)
-            editor.putInt(AlarmTimeoutMinutes.javaClass.name, AlarmTimeoutMinutes.default)
+        editor.putBoolean(ReminderEnabled.javaClass.name, ReminderEnabled.default)
+        editor.putInt(ReminderFrequencyMinutes.javaClass.name, ReminderFrequencyMinutes.default)
 
-            editor.putBoolean(HTTPRequestEnabled.javaClass.name, HTTPRequestEnabled.default)
-            editor.putString(HTTPRequests.javaClass.name, HTTPRequests.default)
+        editor.putBoolean(AlarmEnabled.javaClass.name, AlarmEnabled.default)
+        editor.putBoolean(AlarmIgnoresSilent.javaClass.name, AlarmIgnoresSilent.default)
+        editor.putBoolean(AlarmVibrates.javaClass.name, AlarmVibrates.default)
+        editor.putInt(AlarmTimeoutMinutes.javaClass.name, AlarmTimeoutMinutes.default)
 
-            editor.apply()
-        }
+        editor.putBoolean(HTTPRequestEnabled.javaClass.name, HTTPRequestEnabled.default)
+        editor.putString(HTTPRequests.javaClass.name, HTTPRequests.default)
+
+        editor.apply()
     }
-    // only used upon first boot and to reset settings
-    object ResetDefaults {
-        const val default = false
-    }
+    // only used upon first boot
+    object SettingsInitialized
 
     object Enabled {
         const val default = false
@@ -59,13 +54,19 @@ object Settings {
 
     }
     object ReminderEnabled {
-        const val default = false
+        const val default = true
         fun retrieve(context: Context) =
             getPrefs(context).getBoolean(this.javaClass.name, this.default)
 
     }
     object ReminderFrequencyMinutes {
         const val default = 0
+        fun retrieve(context: Context) =
+            getPrefs(context).getInt(this.javaClass.name, this.default)
+        fun store(context: Context, setting: Int) =
+            getPrefs(context).edit()
+                .putInt(this.javaClass.name, setting)
+                .apply()
     }
     object AlarmEnabled {
         const val default = false
@@ -77,19 +78,11 @@ object Settings {
         const val default = true
         fun retrieve(context: Context) =
             getPrefs(context).getBoolean(this.javaClass.name, this.default)
-        fun store(context: Context, setting: Boolean) =
-            getPrefs(context).edit()
-                .putBoolean(this.javaClass.name, setting)
-                .apply()
     }
     object AlarmVibrates {
         const val default = false
         fun retrieve(context: Context) =
             getPrefs(context).getBoolean(this.javaClass.name, this.default)
-        fun store(context: Context, setting: Boolean) =
-            getPrefs(context).edit()
-                .putBoolean(this.javaClass.name, setting)
-                .apply()
     }
     object AlarmTimeoutMinutes {
         const val default = 2

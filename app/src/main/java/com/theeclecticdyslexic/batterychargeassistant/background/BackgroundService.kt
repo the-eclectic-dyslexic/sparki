@@ -5,10 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import android.util.Log
-import com.theeclecticdyslexic.batterychargeassistant.misc.Debug
-import com.theeclecticdyslexic.batterychargeassistant.misc.NotificationHelper
-import com.theeclecticdyslexic.batterychargeassistant.misc.Settings
-import com.theeclecticdyslexic.batterychargeassistant.misc.Utils
+import com.theeclecticdyslexic.batterychargeassistant.misc.*
 
 
 class BackgroundService : Service() {

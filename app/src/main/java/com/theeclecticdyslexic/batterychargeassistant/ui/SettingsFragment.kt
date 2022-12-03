@@ -1,8 +1,10 @@
 package com.theeclecticdyslexic.batterychargeassistant.ui
 
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.PowerManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,15 +15,12 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.theeclecticdyslexic.batterychargeassistant.*
 import com.theeclecticdyslexic.batterychargeassistant.background.BackgroundService
+import com.theeclecticdyslexic.batterychargeassistant.background.MainReceiver
 import com.theeclecticdyslexic.batterychargeassistant.databinding.SettingsFragmentBinding
 import com.theeclecticdyslexic.batterychargeassistant.misc.NotificationHelper
 import com.theeclecticdyslexic.batterychargeassistant.misc.Settings
 import com.theeclecticdyslexic.batterychargeassistant.misc.Utils
 
-
-/**
- * A simple [Fragment] subclass as the default destination in the navigation.
- */
 class SettingsFragment : Fragment() {
 
     private var _binding: SettingsFragmentBinding? = null
@@ -49,6 +48,11 @@ class SettingsFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        decideWhetherToRenderOptimizerPitch()
+    }
+
     private fun initService() {
         if (BackgroundService.running) return
         val intent = Intent(requireContext(), BackgroundService::class.java).apply{
@@ -67,14 +71,15 @@ class SettingsFragment : Fragment() {
 
     private fun initButtons() {
         binding.buttonHttpRequestSettings.setOnClickListener{
-                _ -> findNavController().navigate(R.id.HTTPRequestSettingsFragment)
+            findNavController().navigate(R.id.HTTPRequestSettingsFragment)
         }
         binding.buttonAlarmSettings.setOnClickListener{
-                _ -> findNavController().navigate(R.id.AlarmSettingsFragment)
+            findNavController().navigate(R.id.AlarmSettingsFragment)
         }
         binding.buttonReminderSettings.setOnClickListener{
-                _ -> findNavController().navigate(R.id.ReminderSettingFragment)
+            findNavController().navigate(R.id.ReminderSettingFragment)
         }
+        initOptimizationSettingsButton()
     }
 
     private fun initBatterTargetSeeker() {
@@ -98,6 +103,10 @@ class SettingsFragment : Fragment() {
                     fromUser: Boolean
                 ) {
                     chargeTarget = progress
+                    updateUI()
+                }
+
+                private fun updateUI() {
                     binding.chargePercentView.text = String.format(
                         getString(R.string.change_target_battery_charge_level),
                         chargeTarget
@@ -107,9 +116,25 @@ class SettingsFragment : Fragment() {
                 override fun onStartTrackingTouch(seekBar: SeekBar?) {}
 
                 override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                    updateSettings()
+                    updateInNotificationControls()
+                }
+
+                private fun updateSettings() {
                     val editor = sharedPrefs.edit()
                     editor.putInt(Settings.ChargeTarget.javaClass.name, chargeTarget)
                     editor.apply()
+                }
+
+                private fun updateInNotificationControls() {
+                    val context = requireContext()
+                    val controlsEnabled = Settings.ControlsEnabled.retrieve(context)
+
+                    val needToUpdateControls =
+                               controlsEnabled
+                            && Utils.isPlugged(context)
+                            && MainReceiver.batteryWatcherRunning
+                    if (needToUpdateControls) NotificationHelper.pushControls(context)
                 }
             }
         )
@@ -124,8 +149,7 @@ class SettingsFragment : Fragment() {
     }
 
     private fun initSwitch(switch: SwitchCompat, settingName: String) {
-        val checked = sharedPrefs.getBoolean(settingName, switch.isChecked)
-        switch.isChecked = checked
+        switch.isChecked = sharedPrefs.getBoolean(settingName, switch.isChecked)
 
         watchSwitch(switch, settingName)
     }
@@ -160,5 +184,25 @@ class SettingsFragment : Fragment() {
                 && controlsEnabled
                 && plugged
                 && Utils.canComplete(context)
+    }
+
+    private fun decideWhetherToRenderOptimizerPitch() {
+        val context = requireContext()
+        val mgr = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+
+        val notOptimized = mgr.isIgnoringBatteryOptimizations(context.packageName)
+        if(notOptimized) removeOptimizerPitch()
+    }
+
+    private fun removeOptimizerPitch() {
+        val parent = binding.optimizerPitch.parent as ViewGroup
+        parent.removeView(binding.optimizerPitch)
+    }
+
+    private fun initOptimizationSettingsButton() {
+        binding.optimizerSettingsButton.setOnClickListener {
+            val intent = Intent(android.provider.Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+            startActivity(intent)
+        }
     }
 }

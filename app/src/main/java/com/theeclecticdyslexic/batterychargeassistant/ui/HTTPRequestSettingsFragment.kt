@@ -19,9 +19,6 @@ import com.theeclecticdyslexic.batterychargeassistant.misc.HTTPRequest
 import com.theeclecticdyslexic.batterychargeassistant.misc.Utils
 import kotlin.math.roundToInt
 
-/**
- * A simple [Fragment] subclass as the second destination in the navigation.
- */
 class HTTPRequestSettingsFragment : Fragment() {
 
     private var _binding: HttpRequestFragmentBinding? = null

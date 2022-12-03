@@ -1,71 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/Theme.BatteryChargeAssistant"
     tools:context=".ui.ReminderSettingsFragment">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:maxWidth="500dp"
-        android:padding="@dimen/normal_padding"
-        android:text="@string/reminder_wait_explainer"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
-        app:layout_constraintVertical_bias="0.3">
+        android:layout_margin="@dimen/normal_padding"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/picker_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:orientation="horizontal">
-
-            <NumberPicker
-                android:id="@+id/reminder_interval_picker_tens"
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:layout_marginStart="@dimen/normal_padding"
-                android:layout_marginTop="@dimen/normal_padding"
-                android:layout_marginBottom="@dimen/normal_padding"/>
-
-            <NumberPicker
-                android:id="@+id/reminder_interval_picker_ones"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:layout_marginEnd="@dimen/normal_padding"
-                android:layout_marginTop="@dimen/normal_padding"
-                android:layout_marginBottom="@dimen/normal_padding" />
-        </LinearLayout>
-
-        <!-- TODO one and many -->
         <TextView
-            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxWidth="500dp"
+            android:padding="@dimen/normal_padding"
+            android:text="@string/reminder_wait_explainer"
+            android:textSize="16sp"/>
 
-            android:layout_centerInParent="true"
-            android:layout_toEndOf="@+id/picker_container"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            android:textColor="?attr/colorOnSecondary"
-            android:text="@string/minutes" />
-    </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/picker_container"
+                android:text="@string/repeat_reminders"
+                android:textAlignment="textEnd"
+                android:textColor="?attr/colorOnSecondary" />
+
+            <LinearLayout
+                android:id="@+id/picker_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:orientation="horizontal">
+
+                <NumberPicker
+                    android:id="@+id/interval_picker_tens"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginStart="@dimen/normal_padding"
+                    android:layout_marginTop="@dimen/normal_padding"
+                    android:layout_marginBottom="@dimen/normal_padding" />
+
+                <NumberPicker
+                    android:id="@+id/interval_picker_ones"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginTop="@dimen/normal_padding"
+                    android:layout_marginEnd="@dimen/normal_padding"
+                    android:layout_marginBottom="@dimen/normal_padding" />
+            </LinearLayout>
+
+            <!-- TODO one and many -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+
+                android:layout_toEndOf="@+id/picker_container"
+                android:gravity="center"
+                android:text="@string/minutes"
+                android:textColor="?attr/colorOnSecondary" />
+        </RelativeLayout>
+    </LinearLayout>
+</ScrollView>

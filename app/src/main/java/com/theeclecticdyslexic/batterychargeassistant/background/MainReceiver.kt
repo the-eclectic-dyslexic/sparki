@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.media.AudioAttributes
+import android.media.AudioManager
 import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.ConnectivityManager
@@ -17,6 +18,8 @@ import android.net.NetworkRequest
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.theeclecticdyslexic.batterychargeassistant.misc.*
@@ -29,6 +32,9 @@ object MainReceiver : BroadcastReceiver() {
     private var lastPercent = -1f
     private var chargeHandled = false
     private lateinit var ringer: Ringtone
+    private lateinit var vibrator: Vibrator
+    var batteryWatcherRunning = true
+        private set
 
     private val alwaysReceiving = listOf(
         Intent.ACTION_POWER_CONNECTED,
@@ -39,6 +45,7 @@ object MainReceiver : BroadcastReceiver() {
 
     fun beginReceiving(context: Context) {
         initRinger(context)
+        initVibrator(context)
         initBroadcastReceivers(context)
         if (Utils.isPlugged(context)) {
             onPowerConnected(context)
@@ -46,6 +53,7 @@ object MainReceiver : BroadcastReceiver() {
     }
 
     fun stopReceiving(context: Context) {
+        cleanUp(context)
         try {
             context.unregisterReceiver(this)
         } catch (e: Exception) {
@@ -60,16 +68,14 @@ object MainReceiver : BroadcastReceiver() {
     }
 
     override fun onReceive(context: Context, intent: Intent) {
-        // TODO this shouldn't be necessary, make sure that all broadcasts are sent to the singleton
         when (intent.action) {
-            Intent.ACTION_POWER_CONNECTED -> onPowerConnected(context)
+            Intent.ACTION_POWER_CONNECTED    -> onPowerConnected(context)
+            Intent.ACTION_POWER_DISCONNECTED -> onPowerDisconnected(context)
+            Action.OVERRIDE_WATCHDOG.id      -> onOverride(context)
+            Action.STOP_ALARM.id             -> stopRinger()
 
-            Intent.ACTION_POWER_DISCONNECTED,
-            Action.OVERRIDE_WATCHDOG.id -> onPowerDisconnected(context)
-
-            Intent.ACTION_BATTERY_CHANGED -> handleChargePercent(context)
-
-            Action.STOP_ALARM.id -> stopRinger()
+            // not always being listened to
+            Intent.ACTION_BATTERY_CHANGED    -> handleChargePercent(context)
 
             else -> Log.d("battery watcher received unhandled intent:","${intent.action}")
         }
@@ -85,11 +91,63 @@ object MainReceiver : BroadcastReceiver() {
                 .build()
     }
 
+    private fun initVibrator(context: Context) {
+        // TODO implement for android 12+ when a device can be tested on
+        vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+    }
+
     private fun playRinger(context: Context) {
         Debug.logOverHTTP(Pair("alarm", "starting"))
         initRinger(context)
-        ringer.play()
 
+        val ring = shouldRing(context)
+        if (ring) {
+            ringer.play()
+        }
+
+        val vibrate = shouldVibrate(context)
+        if (vibrate) {
+            startVibration()
+        }
+
+        if (ring || vibrate) {
+            scheduleTimeout(context)
+            NotificationHelper.pushReminder(context)
+        }
+    }
+
+    private fun shouldRing(context: Context): Boolean {
+        val mgr = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+
+        val volumeOn = mgr.ringerMode == AudioManager.RINGER_MODE_NORMAL
+        val ignoreSilent = Settings.AlarmIgnoresSilent.retrieve(context)
+
+        return ignoreSilent || volumeOn
+    }
+
+    private fun shouldVibrate(context: Context): Boolean {
+        val mgr = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+
+        val notSilent = mgr.ringerMode != AudioManager.RINGER_MODE_SILENT
+        val ignoreSilent = Settings.AlarmIgnoresSilent.retrieve(context)
+        val vibrationEnabled = Settings.AlarmVibrates.retrieve(context)
+
+        return vibrationEnabled && (notSilent || ignoreSilent)
+    }
+
+    private fun startVibration() {
+        val def = VibrationEffect.DEFAULT_AMPLITUDE
+        val timings    = longArrayOf(500L, 500L, 500L, 1500L)
+        val amplitudes = intArrayOf (def,  0,    def,  0)
+
+        vibrator.vibrate(VibrationEffect.createWaveform(
+            timings,
+            amplitudes,
+            0
+        ))
+    }
+
+    private fun scheduleTimeout(context: Context) {
         val timeout = Settings.AlarmTimeoutMinutes.retrieve(context)
         Log.d("timeout", timeout.toString())
         if (timeout <= 0) return
@@ -101,33 +159,42 @@ object MainReceiver : BroadcastReceiver() {
             intentStopRinging,
             PendingIntent.FLAG_IMMUTABLE)
 
+        val targetTime = calculateTimeout(timeout)
         val mgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val millis = 1000
-        val seconds = 60
         mgr.setExact(
             AlarmManager.RTC_WAKEUP,
-            System.currentTimeMillis() + timeout * seconds * millis,
-            //System.currentTimeMillis() + timeout * millis,
+            targetTime,
             pi)
+    }
+
+    private fun calculateTimeout(timeout: Int): Long {
+        val millis = 1000
+        val seconds = 60
+        val delta = timeout * seconds * millis
+        return System.currentTimeMillis() + delta
     }
 
     private fun stopRinger() {
         Debug.logOverHTTP(Pair("alarm", "stopping"))
         ringer.stop()
+        vibrator.cancel()
     }
 
     private fun handleChargePercent(context: Context) {
 
         val percent = Utils.batteryPercentage(context)
+        logMeasurement(percent)
 
         val target = Settings.ChargeTarget.retrieve(context)
-        if (target <= percent && !chargeHandled) {
-            chargeHandled = true
-            handleFullyCharged(context)
-        } else if (target > percent) {
-            chargeHandled = false
-        }
+        val targetMet = target <= percent
 
+        when {
+            targetMet && !chargeHandled -> handleFullyCharged(context)
+            !targetMet                  -> chargeHandled = false
+        }
+    }
+
+    private fun logMeasurement(percent: Float) {
         if (lastPercent == percent) return
         lastPercent = percent
         val time = System.currentTimeMillis()
@@ -136,6 +203,8 @@ object MainReceiver : BroadcastReceiver() {
     }
 
     private fun handleFullyCharged(context: Context) {
+        chargeHandled = true
+
         val reminderEnabled = Settings.ReminderEnabled.retrieve(context)
         if (reminderEnabled) NotificationHelper.pushReminder(context)
 
@@ -201,8 +270,7 @@ object MainReceiver : BroadcastReceiver() {
     private fun initBroadcastReceivers(context: Context) {
         Log.d("registering receivers", "started")
         try {
-            val intents = alwaysReceiving
-            for (i in intents) {
+            for (i in alwaysReceiving) {
                 context.applicationContext.registerReceiver(this, IntentFilter(i))
             }
 
@@ -229,13 +297,25 @@ object MainReceiver : BroadcastReceiver() {
     }
 
     private fun onPowerDisconnected(context: Context) {
+        cleanUp(context)
+
+        Log.d("Charging State Change", "power disconnected")
+        Debug.logOverHTTP(Pair("power_connected", false))
+    }
+
+    private fun onOverride(context: Context) {
+        cleanUp(context)
+
+        Log.d("Battery Watcher", "overriden")
+        Debug.logOverHTTP(Pair("Battery Watcher", "overriden"))
+    }
+
+    private fun cleanUp(context: Context) {
         stopBatteryWatcher(context)
 
         NotificationHelper.cancelReminder(context)
         NotificationHelper.cancelControls(context)
         stopRinger()
-        Log.d("Charging State Change", "power disconnected")
-        Debug.logOverHTTP(Pair("power_connected", false))
     }
 
     private fun stopBatteryWatcher(context: Context) {
@@ -245,6 +325,7 @@ object MainReceiver : BroadcastReceiver() {
             Log.d("failed to unregister receivers","$e")
         }
         initBroadcastReceivers(context)
+        batteryWatcherRunning = false
     }
 
     private fun startBatteryWatcher(context: Context) {
@@ -256,6 +337,7 @@ object MainReceiver : BroadcastReceiver() {
         } catch (e : Exception) {
             // do nothing, already registered
         }
+        batteryWatcherRunning = true
     }
 
 }

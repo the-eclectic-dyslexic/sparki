@@ -1,104 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.AlarmSettingsFragment">
-
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/enable_vibration"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:paddingStart="@dimen/normal_padding"
-            android:paddingEnd="0dp"
-            android:paddingTop="@dimen/normal_padding"
-            android:paddingBottom="@dimen/normal_padding"
-            android:text="@string/vibrate"
-            android:textSize="16sp" />
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/alarm_ignores_silent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:paddingStart="@dimen/normal_padding"
-            android:paddingEnd="0dp"
-            android:paddingTop="@dimen/normal_padding"
-            android:paddingBottom="@dimen/normal_padding"
-            android:text="@string/ignore_silent"
-            android:textSize="16sp" />
-    </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/relativeLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
-
-        <TextView
-            android:id="@+id/timeout_after"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_centerInParent="true"
-            android:layout_toStartOf="@+id/picker_container"
-
-            android:textAlignment="textEnd"
-            android:textColor="?attr/colorOnSecondary"
-            android:text="@string/timeout_after" />
-
         <LinearLayout
-            android:id="@+id/picker_container"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:orientation="horizontal">
+            android:layout_margin="@dimen/normal_padding"
+            android:orientation="vertical" >
 
-            <NumberPicker
-                android:id="@+id/reminder_interval_picker_tens"
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/enable_vibration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:paddingStart="@dimen/normal_padding"
+                    android:paddingTop="@dimen/normal_padding"
+                    android:paddingEnd="0dp"
+                    android:paddingBottom="@dimen/normal_padding"
+                    android:text="@string/vibrate"
+                    android:textSize="16sp" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/alarm_ignores_silent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:paddingStart="@dimen/normal_padding"
+                    android:paddingTop="@dimen/normal_padding"
+                    android:paddingEnd="0dp"
+                    android:paddingBottom="@dimen/normal_padding"
+                    android:text="@string/ignore_silent"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxWidth="500dp"
+                android:padding="@dimen/normal_padding"
+                android:text="@string/alarm_timeout_explainer"
+                android:textSize="16sp"/>
 
-                android:layout_marginStart="@dimen/normal_padding"
-                android:layout_marginTop="@dimen/normal_padding"
-                android:layout_marginBottom="@dimen/normal_padding" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <NumberPicker
-                android:id="@+id/reminder_interval_picker_ones"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
 
-                android:layout_marginEnd="@dimen/normal_padding"
-                android:layout_marginTop="@dimen/normal_padding"
-                android:layout_marginBottom="@dimen/normal_padding"/>
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/picker_container"
+                    android:text="@string/timeout_after"
+                    android:textAlignment="textEnd"
+                    android:textColor="?attr/colorOnSecondary" />
+
+                <LinearLayout
+                    android:id="@+id/picker_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:orientation="horizontal">
+
+                    <NumberPicker
+                        android:id="@+id/interval_picker_tens"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_marginStart="@dimen/normal_padding"
+                        android:layout_marginTop="@dimen/normal_padding"
+                        android:layout_marginBottom="@dimen/normal_padding" />
+
+                    <NumberPicker
+                        android:id="@+id/interval_picker_ones"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_marginTop="@dimen/normal_padding"
+                        android:layout_marginEnd="@dimen/normal_padding"
+                        android:layout_marginBottom="@dimen/normal_padding" />
+                </LinearLayout>
+
+                <!-- TODO one and many -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+
+                    android:layout_toEndOf="@+id/picker_container"
+                    android:gravity="center"
+                    android:text="@string/minutes"
+                    android:textColor="?attr/colorOnSecondary" />
+            </RelativeLayout>
+
         </LinearLayout>
 
-        <!-- TODO one and many -->
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_centerInParent="true"
-            android:layout_toEndOf="@+id/picker_container"
-
-            android:textColor="?attr/colorOnSecondary"
-            android:text="@string/minutes" />
-    </RelativeLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

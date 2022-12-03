@@ -192,6 +192,30 @@
 
             </TableLayout>
 
+
+            <LinearLayout
+                android:id="@+id/optimizer_pitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/normal_padding">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/battery_optimizer_explanation" />
+
+                <Button
+                    android:id="@+id/optimizer_settings_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/normal_padding"
+                    android:text="@string/take_me_to_the_optimizer" />
+            </LinearLayout>
+
+
+
+
         </LinearLayout>
     </ScrollView>
 
