@@ -63,8 +63,7 @@ object Utils {
             .dropLastWhile(invalidEnd)
     }
 
-    fun sendREST(address: String) {
-
+    fun sendHTTPGET(address: String) {
         val url = URL(address)
         fun buildRunnable(): Runnable {
             return Runnable {

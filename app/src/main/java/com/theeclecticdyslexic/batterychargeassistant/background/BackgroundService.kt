@@ -26,9 +26,8 @@ class BackgroundService : Service() {
 
         Debug.logOverHTTP(Pair("starting_service", true))
 
-        val enabled = Settings.Enabled.retrieve(this)
         try {
-            if (enabled) {
+            if (shouldRun(this)) {
                 MainReceiver.beginReceiving(this)
             }
         } catch (e : Exception) {

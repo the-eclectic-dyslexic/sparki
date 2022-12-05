@@ -133,7 +133,7 @@ class SettingsFragment : Fragment() {
                     val needToUpdateControls =
                                controlsEnabled
                             && Utils.isPlugged(context)
-                            && MainReceiver.batteryWatcherRunning
+                            && MainReceiver.chargeWatcherRunning
                     if (needToUpdateControls) NotificationHelper.pushControls(context)
                 }
             }
