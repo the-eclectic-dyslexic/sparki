@@ -14,7 +14,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:paddingBottom="32dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -103,8 +104,6 @@
                             android:hint="@string/http_hint" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </TableRow>
-
-
             </TableLayout>
 
             <ImageButton
@@ -114,15 +113,51 @@
                 android:scaleX="1.5"
                 android:scaleY="1.5"
                 android:layout_gravity="end"
-                android:layout_marginTop="@dimen/normal_padding"
-                android:layout_marginStart="@dimen/normal_padding"
-                android:layout_marginEnd="@dimen/normal_padding"
-                android:layout_marginBottom="48dp"
+                android:layout_margin="@dimen/normal_padding"
                 android:backgroundTint="?attr/colorOnPrimary"
                 app:tint="?attr/colorPrimary"
                 android:src="@android:drawable/ic_input_add"
                 android:contentDescription="@string/add_row_button" />
 
+            <LinearLayout
+                android:id="@+id/location_pitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_margin="@dimen/normal_padding"
+                    android:text="@string/permission_explainer"/>
+
+                <Button
+                    android:id="@+id/location_permission_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/normal_padding"
+                    android:text="@string/give_permission" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/location_pitch_again"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_margin="@dimen/normal_padding"
+                    android:text="@string/background_pitch"/>
+
+                <Button
+                    android:id="@+id/background_location_permission_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/normal_padding"
+                    android:text="@string/give_permission" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

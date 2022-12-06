@@ -1,6 +1,8 @@
 package com.theeclecticdyslexic.batterychargeassistant.ui
 
 import android.app.ActionBar.LayoutParams
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.ContextThemeWrapper
 import androidx.fragment.app.Fragment
@@ -10,13 +12,13 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TableRow
+import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat.requestPermissions
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.theeclecticdyslexic.batterychargeassistant.R
-import com.theeclecticdyslexic.batterychargeassistant.misc.Settings
 import com.theeclecticdyslexic.batterychargeassistant.databinding.HttpRequestFragmentBinding
-import com.theeclecticdyslexic.batterychargeassistant.misc.HTTPRequest
-import com.theeclecticdyslexic.batterychargeassistant.misc.Utils
+import com.theeclecticdyslexic.batterychargeassistant.misc.*
 import kotlin.math.roundToInt
 
 class HTTPRequestSettingsFragment : Fragment() {
@@ -25,7 +27,10 @@ class HTTPRequestSettingsFragment : Fragment() {
     private val binding get() = _binding!!
     private val idPairs : MutableList<IDPair> = mutableListOf()
 
-    private data class IDPair(val ssid: Int, val url: Int)
+    companion object {
+        private const val REQUEST_LOCATION_AND_WIFI_PERMISSION = 1
+        private const val REQUEST_BACKGROUND_LOCATION = 2
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +40,10 @@ class HTTPRequestSettingsFragment : Fragment() {
 
         initTextInputs()
         initAddButton()
+        initLocationPermissionButton()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            initBackgroundLocationPermissionButton()
+        }
 
         return binding.root
     }
@@ -43,6 +52,11 @@ class HTTPRequestSettingsFragment : Fragment() {
         super.onPause()
         val entries = buildEntriesFromIds()
         Settings.HTTPRequests.store(requireContext(), entries)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        decideWhetherToShowLocationPermissionPitch()
     }
 
     private fun buildEntriesFromIds() : Array<HTTPRequest> {
@@ -147,8 +161,53 @@ class HTTPRequestSettingsFragment : Fragment() {
         return Pair(editor.id, container)
     }
 
+    private fun decideWhetherToShowLocationPermissionPitch() {
+        val context = requireContext()
+
+        val granted = Permissions.locationGranted(context)
+
+        binding.locationPitch.visibility =
+            when{
+                granted -> View.GONE
+                else -> View.VISIBLE
+            }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val backGroundGranted = context.checkSelfPermission(android.Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED
+
+            binding.locationPitchAgain.visibility =
+                when{
+                    !granted || backGroundGranted -> View.GONE
+                    else -> View.VISIBLE
+                }
+        }
+    }
+
+    private fun initLocationPermissionButton() {
+        binding.locationPermissionButton.setOnClickListener {
+            requestPermissions(
+                this.requireActivity(),
+                Permissions.location,
+                REQUEST_LOCATION_AND_WIFI_PERMISSION
+            )
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun initBackgroundLocationPermissionButton() {
+        binding.backgroundLocationPermissionButton.setOnClickListener {
+            requestPermissions(
+                this.requireActivity(),
+                arrayOf(android.Manifest.permission.ACCESS_BACKGROUND_LOCATION),
+                REQUEST_BACKGROUND_LOCATION
+            )
+        }
+    }
+
     private fun dp(i: Int): Int {
         val factor = requireContext().resources.displayMetrics.density
         return (i*factor).roundToInt()
     }
+
+    private data class IDPair(val ssid: Int, val url: Int)
 }

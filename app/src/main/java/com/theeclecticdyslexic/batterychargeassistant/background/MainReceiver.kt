@@ -5,55 +5,60 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
-import com.theeclecticdyslexic.batterychargeassistant.background.delegates.AlarmDelegate
-import com.theeclecticdyslexic.batterychargeassistant.background.delegates.ChargeWatcherDelegate
-import com.theeclecticdyslexic.batterychargeassistant.background.delegates.HTTPRequestDelegate
-import com.theeclecticdyslexic.batterychargeassistant.background.delegates.ReminderDelegate
+import com.theeclecticdyslexic.batterychargeassistant.background.delegates.AlarmSounder
+import com.theeclecticdyslexic.batterychargeassistant.background.delegates.ChargeMeasurer
+import com.theeclecticdyslexic.batterychargeassistant.background.delegates.GETRequester
+import com.theeclecticdyslexic.batterychargeassistant.background.delegates.ReminderSender
 import com.theeclecticdyslexic.batterychargeassistant.misc.*
 
 
 object MainReceiver : BroadcastReceiver() {
 
-    private lateinit var alarm: AlarmDelegate
-    private lateinit var reminder: ReminderDelegate
-    private lateinit var getRequester: HTTPRequestDelegate
-    private var chargeWatcher: ChargeWatcherDelegate? = null
-    val chargeWatcherRunning
-        get() = chargeWatcher != null
+    private lateinit var reminderSender: ReminderSender
+    private lateinit var alarmSounder: AlarmSounder
+    private val getRequester = GETRequester()
 
-    private val alwaysReceiving = listOf(
-        Intent.ACTION_POWER_CONNECTED,
-        Intent.ACTION_POWER_DISCONNECTED,
-        Action.OVERRIDE_WATCHDOG.id,
-        Action.STOP_ALARM.id
+    private val chargeMeasurer = ChargeMeasurer()
+    val chargeReceiverRunning
+        get() = chargeMeasurer.running
+
+    private val onChargeTargetReachedDelegates by lazy {
+        listOf(
+            reminderSender,
+            alarmSounder,
+            getRequester)
+    }
+
+    private val intentMap = mapOf(
+        Pair( Intent.ACTION_POWER_CONNECTED,    ::onPowerConnected),
+        Pair( Intent.ACTION_POWER_DISCONNECTED, ::onPowerDisconnected),
+        Pair( Action.OVERRIDE_WATCHDOG.id,      ::onOverrideWatchdog),
+        Pair( Action.CHARGE_TARGET_REACHED.id,  ::onChargeTargetReached)
     )
 
     override fun onReceive(context: Context, intent: Intent) {
-        when (intent.action) {
-            Intent.ACTION_POWER_CONNECTED    -> onPowerConnected(context)
-            Intent.ACTION_POWER_DISCONNECTED -> onPowerDisconnected(context)
-            Action.OVERRIDE_WATCHDOG.id      -> onOverride(context)
-            Action.STOP_ALARM.id             -> alarm.stop()
-
-            // not always being listened to
-            Intent.ACTION_BATTERY_CHANGED    -> handleChargePercent(context)
-
-            else -> Log.d("battery watcher received unhandled intent:","${intent.action}")
+        val action = intent.action
+        val handler = intentMap[action]
+        if (handler == null) {
+            Log.d("${javaClass.name} received unhandled intent", action.toString())
+            return
         }
+
+        // used instead of when statement to avoid mistakes in code duplication
+        handler.invoke(context)
     }
 
-    fun beginReceiving(context: Context) {
-        alarm = AlarmDelegate(context)
-        reminder = ReminderDelegate()
-        getRequester = HTTPRequestDelegate()
-
+    fun start(context: Context) {
+        alarmSounder = AlarmSounder(context)
+        reminderSender = ReminderSender(context)
         initBroadcastReceivers(context)
+
         if (Utils.isPlugged(context)) {
             onPowerConnected(context)
         }
     }
 
-    fun stopReceiving(context: Context) {
+    fun stop(context: Context) {
         cleanUp(context)
         try {
             context.unregisterReceiver(this)
@@ -62,46 +67,30 @@ object MainReceiver : BroadcastReceiver() {
         }
     }
 
-    private fun handleChargePercent(context: Context) {
-        if (chargeWatcher!!.isTargetJustReached(context)) {
-            handleFullyCharged(context)
-        }
-    }
+    private fun onChargeTargetReached(context: Context) {
+        onChargeTargetReachedDelegates.forEach { it.start(context) }
 
-    private fun handleFullyCharged(context: Context) {
-        reminder.push(context)
-        alarm.play(context)
-        getRequester.sendRequests(context)
-
-        NotificationHelper.cancelControls(context)
-
-        stopBatteryWatcher(context)
+        chargeMeasurer.stop(context)
     }
 
     private fun initBroadcastReceivers(context: Context) {
         Log.d("registering receivers", "started")
         try {
-            for (i in alwaysReceiving) {
-                context.applicationContext.registerReceiver(this, IntentFilter(i))
+            for (intentName in intentMap.keys) {
+                context.applicationContext.registerReceiver(this, IntentFilter(intentName))
             }
 
             Log.d("registering receivers", "completed")
         } catch (e: Exception) {
-            // nothing to do, they are already registered
             Log.d("failed to register receiver", "$e")
         }
     }
 
     private fun onPowerConnected(context: Context) {
-        val enabled = Settings.Enabled.retrieve(context) // shouldn't be necessary
-        if (!enabled) return
+        val enabled = Settings.Enabled.retrieve(context)
+        if (!enabled) return // shouldn't be necessary
 
-        startBatteryWatcher(context)
-
-        val controlsOn = Settings.ControlsEnabled.retrieve(context)
-        if (controlsOn) {
-            NotificationHelper.pushControls(context)
-        }
+        chargeMeasurer.start(context)
 
         Log.d("Charging State Change", "power connected")
         Debug.logOverHTTP(Pair("power_connected", true))
@@ -114,42 +103,14 @@ object MainReceiver : BroadcastReceiver() {
         Debug.logOverHTTP(Pair("power_connected", false))
     }
 
-    private fun onOverride(context: Context) {
+    private fun onOverrideWatchdog(context: Context) {
         cleanUp(context)
 
         Log.d("Battery Watcher", "overriden")
-        Debug.logOverHTTP(Pair("Battery Watcher", "overriden"))
+        Debug.logOverHTTP(Pair("battery_watcher", "overriden"))
     }
 
     private fun cleanUp(context: Context) {
-        stopBatteryWatcher(context)
-
-        NotificationHelper.cancelControls(context)
-
-        reminder.cancel(context)
-        alarm.stop()
+        onChargeTargetReachedDelegates.forEach { it.stop(context) }
     }
-
-    private fun stopBatteryWatcher(context: Context) {
-        try {
-            context.unregisterReceiver(this)
-        } catch (e: Exception) {
-            Log.d("failed to unregister receivers","$e")
-        }
-        initBroadcastReceivers(context)
-        chargeWatcher = null
-    }
-
-    private fun startBatteryWatcher(context: Context) {
-        try {
-            context.registerReceiver(
-                this,
-                IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-        } catch (e : Exception) {
-            Log.d("failed to register battery change receiver", "$e")
-            // do nothing, already registered
-        }
-        chargeWatcher = ChargeWatcherDelegate(context)
-    }
-
 }

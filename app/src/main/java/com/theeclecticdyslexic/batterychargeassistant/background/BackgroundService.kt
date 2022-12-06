@@ -17,7 +17,7 @@ class BackgroundService : Service() {
         fun shouldRun(context: Context): Boolean {
             val enabled = Settings.Enabled.retrieve(context)
 
-            return  enabled && Utils.canComplete(context)
+            return  enabled && !running && Utils.canComplete(context)
         }
     }
 
@@ -28,7 +28,7 @@ class BackgroundService : Service() {
 
         try {
             if (shouldRun(this)) {
-                MainReceiver.beginReceiving(this)
+                MainReceiver.start(this)
             }
         } catch (e : Exception) {
             Log.d("Exception Occurred", "While trying to start service $e")
@@ -42,7 +42,7 @@ class BackgroundService : Service() {
 
     override fun onDestroy() {
         Debug.logOverHTTP(Pair("stopping_service", true))
-        MainReceiver.stopReceiving(this)
+        MainReceiver.stop(this)
 
         running = false
     }

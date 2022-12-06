@@ -50,7 +50,7 @@ class SettingsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        decideWhetherToRenderOptimizerPitch()
+        decideWhetherToShowOptimizerPitch()
     }
 
     private fun initService() {
@@ -90,7 +90,6 @@ class SettingsFragment : Fragment() {
         watchBatteryTargetSeeker()
     }
 
-    // TODO if plugged in update charge targets immediately upon the charge limit changing
     private fun watchBatteryTargetSeeker() {
         binding.chargeSeekBar.setOnSeekBarChangeListener(
 
@@ -106,18 +105,16 @@ class SettingsFragment : Fragment() {
                     updateUI()
                 }
 
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                    updateSettings()
+                    updateInNotificationControls()
+                }
+
                 private fun updateUI() {
                     binding.chargePercentView.text = String.format(
                         getString(R.string.change_target_battery_charge_level),
                         chargeTarget
                     )
-                }
-
-                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-
-                override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                    updateSettings()
-                    updateInNotificationControls()
                 }
 
                 private fun updateSettings() {
@@ -133,9 +130,12 @@ class SettingsFragment : Fragment() {
                     val needToUpdateControls =
                                controlsEnabled
                             && Utils.isPlugged(context)
-                            && MainReceiver.chargeWatcherRunning
+                            && MainReceiver.chargeReceiverRunning
                     if (needToUpdateControls) NotificationHelper.pushControls(context)
                 }
+
+                // intentionally unimplemented
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             }
         )
     }
@@ -186,17 +186,14 @@ class SettingsFragment : Fragment() {
                 && Utils.canComplete(context)
     }
 
-    private fun decideWhetherToRenderOptimizerPitch() {
+    private fun decideWhetherToShowOptimizerPitch() {
         val context = requireContext()
         val mgr = context.getSystemService(Context.POWER_SERVICE) as PowerManager
 
         val notOptimized = mgr.isIgnoringBatteryOptimizations(context.packageName)
-        if(notOptimized) removeOptimizerPitch()
-    }
-
-    private fun removeOptimizerPitch() {
-        val parent = binding.optimizerPitch.parent as ViewGroup
-        parent.removeView(binding.optimizerPitch)
+        binding.optimizerPitch.visibility =
+            if (notOptimized) View.GONE
+            else              View.VISIBLE
     }
 
     private fun initOptimizationSettingsButton() {

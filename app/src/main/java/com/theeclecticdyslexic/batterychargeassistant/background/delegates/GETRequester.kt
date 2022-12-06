@@ -10,32 +10,45 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.theeclecticdyslexic.batterychargeassistant.misc.Haltable
+import com.theeclecticdyslexic.batterychargeassistant.misc.Permissions
 import com.theeclecticdyslexic.batterychargeassistant.misc.Settings
 import com.theeclecticdyslexic.batterychargeassistant.misc.Utils
 
-class HTTPRequestDelegate {
+class GETRequester : Haltable {
 
-    fun sendRequests(context: Context) {
+    override fun start(context: Context) {
         val httpRequestEnabled = Settings.HTTPRequestEnabled.retrieve(context)
-        if (httpRequestEnabled) sendHTTPRequests(context)
+        if (httpRequestEnabled) sendGETRequests(context)
     }
 
-    private fun sendHTTPRequests(context: Context) {
+    override fun stop(context: Context) {}
+
+    private fun sendGETRequests(context: Context) {
         val ssid =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) getNetworkSSID(context)
-            else deprecatedGetNetworkSSID(context)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                getNetworkSSID(context)
+            } else {
+                deprecated.getNetworkSSID(context)
+            }
 
         Log.d("checking if ssid is assigned synchronously", ssid)
 
-        val sanitized = Utils.sanitizeSSID(ssid)
-        val options = listOf(sanitized, "")
-        val requests = Settings.HTTPRequests.retrieve(context)
 
+        val options = if (Permissions.locationGranted(context)) {
+            val sanitized = Utils.sanitizeSSID(ssid)
+            listOf(sanitized, "")
+        } else {
+            listOf("")
+        }
+
+        val requests = Settings.HTTPRequests.retrieve(context)
         requests.filter { it.ssid in options }
             .filter { it.url != "" }
             .map { it.url }
             .forEach(Utils::sendHTTPGET)
     }
+
     @RequiresApi(Build.VERSION_CODES.S)
     private fun getNetworkSSID(context: Context): String {
         // TODO there MUST be a better way to do this
@@ -62,8 +75,10 @@ class HTTPRequestDelegate {
         return ssid
     }
 
-    private fun deprecatedGetNetworkSSID(context: Context): String {
-        val deprecatedMgr = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
-        return deprecatedMgr.connectionInfo.ssid
+    private val deprecated = object {
+        fun getNetworkSSID(context: Context): String {
+            val deprecatedMgr = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            return deprecatedMgr.connectionInfo.ssid
+        }
     }
 }

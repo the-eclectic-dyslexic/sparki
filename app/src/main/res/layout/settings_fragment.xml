@@ -22,6 +22,7 @@
             android:layout_height="wrap_content"
             android:paddingStart="@dimen/fab_margin"
             android:paddingEnd="@dimen/fab_margin"
+            android:paddingBottom="@dimen/title_padding"
             android:orientation="vertical">
 
             <TextView
@@ -197,12 +198,12 @@
                 android:id="@+id/optimizer_pitch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="@dimen/normal_padding">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/normal_padding"
                     android:text="@string/battery_optimizer_explanation" />
 
                 <Button
@@ -212,10 +213,6 @@
                     android:layout_margin="@dimen/normal_padding"
                     android:text="@string/take_me_to_the_optimizer" />
             </LinearLayout>
-
-
-
-
         </LinearLayout>
     </ScrollView>
 

@@ -63,6 +63,12 @@ object Utils {
             .dropLastWhile(invalidEnd)
     }
 
+    fun minutesToMillis(n: Int): Long {
+        val millis = 1000L
+        val seconds = 60
+        return n * seconds * millis
+    }
+
     fun sendHTTPGET(address: String) {
         val url = URL(address)
         fun buildRunnable(): Runnable {
