@@ -20,43 +20,4 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.BatteryChargeAssistant.Editor" parent="android:Widget.EditText">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">@dimen/normal_padding</item>
-        <item name="android:inputType">text</item>
-        <item name="backgroundTint">?attr/colorOnPrimary</item>
-        <item name="android:textColorHint">?attr/colorAccent</item>
-    </style>
-
-    <style name="Theme.BatteryChargeAssistant.SSIDEditor" parent="Theme.BatteryChargeAssistant.Editor">
-        <item name="android:hint">@string/ssid_hint</item>
-    </style>
-
-    <style name="Theme.BatteryChargeAssistant.URLEditor" parent="Theme.BatteryChargeAssistant.Editor">
-        <item name="android:hint">@string/http_hint</item>
-    </style>
-
-    <style name="Theme.BatteryChargeAssistant.EditorContainer">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-    </style>
-
-    <style name="Theme.BatteryChargeAssistant.RemoveRowButton">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">@dimen/normal_padding</item>
-        <item name="android:backgroundTint">?attr/colorOnPrimary</item>
-        <item name="android:tint">?attr/colorPrimary</item>
-        <item name="android:src">@android:drawable/ic_delete</item>
-        <item name="android:contextDescription">@string/remove_row_button</item>
-        <item name="android:layout_weight">0</item>
-    </style>
-
-    <style name="Theme.BatteryChargeAssistant.TableRow">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-
 </resources>

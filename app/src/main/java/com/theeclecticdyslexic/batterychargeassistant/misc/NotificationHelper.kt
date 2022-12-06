@@ -146,7 +146,7 @@ object NotificationHelper {
             .addLinkToMain(context)
             .setSmallIcon(R.drawable.ic_baseline_edit_24)
             .setContentTitle("Sparki is working in the background (like a good boy)")
-            .setContentText("This notification can be permanently hidden in notification settings.")
+            .setContentText("You can hide this notification in system settings.")
             .addNotificationSettingsAction(context)
             .setPriority(NotificationCompat.PRIORITY_MIN)
 

@@ -14,10 +14,18 @@ class BackgroundService : Service() {
         var running = false
             private set
 
-        fun shouldRun(context: Context): Boolean {
+        fun shouldBeRunning(context: Context): Boolean {
             val enabled = Settings.Enabled.retrieve(context)
 
-            return  enabled && !running && Utils.canComplete(context)
+            return  enabled && Utils.canComplete(context)
+        }
+
+        fun needsToStop(context: Context): Boolean {
+            return !shouldBeRunning(context) && running
+        }
+
+        fun needsToStart(context: Context): Boolean {
+            return shouldBeRunning(context) && !running
         }
     }
 
@@ -27,7 +35,7 @@ class BackgroundService : Service() {
         Debug.logOverHTTP(Pair("starting_service", true))
 
         try {
-            if (shouldRun(this)) {
+            if (shouldBeRunning(this)) {
                 MainReceiver.start(this)
             }
         } catch (e : Exception) {

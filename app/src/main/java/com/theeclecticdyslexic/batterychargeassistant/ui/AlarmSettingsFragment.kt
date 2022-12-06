@@ -20,9 +20,10 @@ class AlarmSettingsFragment : Fragment() {
     private lateinit var sharedPrefs: SharedPreferences
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         sharedPrefs = requireContext().getSharedPreferences(Settings.javaClass.name, AppCompatActivity.MODE_PRIVATE)
         _binding = AlarmSettingsFragmentBinding.inflate(inflater, container, false)

@@ -29,7 +29,8 @@ class SettingsFragment : Fragment() {
     private lateinit var sharedPrefs: SharedPreferences
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
@@ -41,7 +42,7 @@ class SettingsFragment : Fragment() {
         initAllSwitches()
         initButtons()
 
-        if(BackgroundService.shouldRun(context)){
+        if(BackgroundService.needsToStart(context)){
             initService()
         }
 
@@ -54,7 +55,6 @@ class SettingsFragment : Fragment() {
     }
 
     private fun initService() {
-        if (BackgroundService.running) return
         val intent = Intent(requireContext(), BackgroundService::class.java).apply{
             action = BackgroundService::class.java.name
         }
@@ -62,7 +62,6 @@ class SettingsFragment : Fragment() {
     }
 
     private fun dismantleService() {
-        if (!BackgroundService.running) return
         val intent = Intent(requireContext(), BackgroundService::class.java).apply{
             action = BackgroundService::class.java.name
         }
@@ -164,9 +163,10 @@ class SettingsFragment : Fragment() {
             editor.putBoolean(settingName, isChecked)
             editor.apply()
 
-            val shouldRun = BackgroundService.shouldRun(context)
-            if (shouldRun)  initService()
-            else            dismantleService()
+            when {
+                BackgroundService.needsToStart(context) -> initService()
+                BackgroundService.needsToStop(context) -> dismantleService()
+            }
 
             when {
                 !alreadyShown && shouldShow() -> NotificationHelper.pushControls(context)

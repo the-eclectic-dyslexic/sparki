@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.theeclecticdyslexic.batterychargeassistant.misc.Action
-import com.theeclecticdyslexic.batterychargeassistant.misc.Debug
 
 class OnBootReceiver : BroadcastReceiver() {
 
@@ -15,7 +14,7 @@ class OnBootReceiver : BroadcastReceiver() {
             action = Action.START_BACKGROUND_SERVICE.id
         }
 
-        val needToStart = BackgroundService.shouldRun(context)
+        val needToStart = BackgroundService.needsToStart(context)
         if (needToStart) context.startService(backgroundIntent)
     }
 }
