@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Sparki - The Battery Charging Watchdog</string>
+    <string name="app_name">Sparki</string>
 
     <!-- Strings used for fragments for navigation -->
     <string name="settings_fragment_label">Sparki - General Settings</string>
@@ -40,7 +40,7 @@
     <string name="repeat_reminders">Send repeat reminders every</string>
     <string name="take_me_to_the_optimizer">Take Me To The Optimizer Settings</string>
     <string name="battery_optimizer_explanation">Sometimes Sparki will be prevented from running in the background by your device. If you are having trouble, either with Sparki not reminding you when the battery is charged or Sparki not properly starting when you reboot your device, first take a look at the battery optimizer and make sure Sparki is not being optimized.\n\n<i>Don\'t worry too much about the battery life impact; Sparki doesn\'t work too hard and when he does it\'s almost exclusively while the battery is charging.</i></string>
-    <string name="permission_explainer">Unfortunately, Sparki can\'t know which WiFi network your device is on without location permissions being granted all the time. The poor old boy\'s eyesight and memory aren\'t very good. If you withhold location permissions only entries with an empty <b>SSID</b> entry will work.\n\nDon\'t worry though, Sparki doesn\'t collect any of your data (location or otherwise). You, or anyone else, can confirm that for yourselves, as Sparki\'s code is open source and <a href="https://github.com/the-eclectic-dyslexic/battery-charge-assistant">available on GitHub</a>.</string>
+    <string name="permission_explainer">Unfortunately, Sparki can\'t know which WiFi network your device is on without location permissions being granted all the time. The poor old boy\'s eyesight and memory aren\'t very good. If you withhold location permissions only entries with an empty <b>SSID</b> entry will work.\n\nDon\'t worry though, Sparki doesn\'t collect any of your data (location or otherwise). You, or anyone else, can confirm that for yourselves, as Sparki\'s code is open source and <a href="https://github.com/the-eclectic-dyslexic/sparki">available on GitHub</a>.</string>
     <string name="give_permission">Give Permission</string>
     <string name="background_pitch">Don\'t forget Sparki needs location permissions while running in the background as well!</string>
     <string name="general_settings">Settings</string>

@@ -1,6 +1,7 @@
 package com.theeclecticdyslexic.sparki.ui
 
 import android.content.pm.PackageManager
+import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -56,6 +57,7 @@ class HTTPRequestSettingsFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         decideWhetherToShowLocationPermissionPitch()
+
     }
 
     private fun buildEntriesFromIds() : Array<HTTPRequest> {
@@ -105,6 +107,7 @@ class HTTPRequestSettingsFragment : Fragment() {
 
     private fun TableRow.initEditor(searchTag: String, id: Int, text: String) {
         val editor = this.findViewWithTag<TextInputEditText>(searchTag)
+        editor.backgroundTintList = binding.firstSsid.backgroundTintList
         editor.id = id
         editor.setText(text)
     }

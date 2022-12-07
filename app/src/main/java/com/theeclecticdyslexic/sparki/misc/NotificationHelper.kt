@@ -59,10 +59,10 @@ object NotificationHelper {
             .setAutoCancel(false)
             .setOnlyAlertOnce(true)
             .addLinkToMain(context)
-            .setSmallIcon(R.drawable.ic_baseline_edit_24)
+            .setSmallIcon(R.drawable.ic_sparki)
             .setContentTitle("Currently Charging")
             .setContentText("Sparki will let you know when the battery reaches ${target}%")
-            .addAction(R.drawable.ic_baseline_edit_24, "Let Sparki rest this time", piDisableWatcher)
+            .addAction(R.drawable.ic_sparki, "Let Sparki rest this time", piDisableWatcher)
             .setPriority(NotificationCompat.PRIORITY_MAX)
 
         return notification.build()
@@ -104,7 +104,7 @@ object NotificationHelper {
             .setAutoCancel(false)
             .addLinkToMain(context)
             .addDismissAction(context)
-            .setSmallIcon(R.drawable.ic_baseline_edit_24)
+            .setSmallIcon(R.drawable.ic_sparki)
             .setContentTitle("Time To Stop Charging")
             .setContentText("Your device has reached ${target}%")
             .setPriority(NotificationCompat.PRIORITY_MAX)
@@ -119,7 +119,7 @@ object NotificationHelper {
             0,
             intent,
             PendingIntent.FLAG_IMMUTABLE)
-        this.addAction(R.drawable.ic_baseline_edit_24, "Sparki, shush", pi)
+        this.addAction(R.drawable.ic_sparki, "Sparki, shush", pi)
         return this
     }
 
@@ -144,7 +144,7 @@ object NotificationHelper {
             .setOngoing(true)
             .setAutoCancel(false)
             .addLinkToMain(context)
-            .setSmallIcon(R.drawable.ic_baseline_edit_24)
+            .setSmallIcon(R.drawable.ic_sparki)
             .setContentTitle("Sparki is working in the background (like a good boy)")
             .setContentText("You can hide this notification in system settings.")
             .addNotificationSettingsAction(context)
@@ -158,7 +158,7 @@ object NotificationHelper {
             putExtra(android.provider.Settings.EXTRA_APP_PACKAGE, context.packageName)
         }
         val pi = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-        this.addAction(R.drawable.ic_baseline_edit_24, "Take me there", pi)
+        this.addAction(R.drawable.ic_sparki, "Take me there", pi)
         return this
     }
 

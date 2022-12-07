@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/Theme.Sparki"
+    android:background="?attr/colorOnPrimary"
     tools:context=".ui.HTTPRequestSettingsFragment">
 
     <ScrollView
@@ -83,8 +84,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="@dimen/normal_padding"
-                            android:backgroundTint="?attr/colorOnPrimary"
-                            android:textColorHint="?attr/colorAccent"
+                            android:theme="@style/Theme.Sparki.TextInput"
                             android:hint="@string/ssid_hint" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -97,10 +97,8 @@
                             android:id="@+id/first_url"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="text"
                             android:layout_margin="@dimen/normal_padding"
-                            android:backgroundTint="?attr/colorOnPrimary"
-                            android:textColorHint="?attr/colorAccent"
+                            android:theme="@style/Theme.Sparki.TextInput"
                             android:hint="@string/http_hint" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </TableRow>

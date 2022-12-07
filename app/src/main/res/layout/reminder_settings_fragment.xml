@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/Theme.Sparki"
+    android:background="?attr/colorOnPrimary"
     tools:context=".ui.ReminderSettingsFragment">
 
     <LinearLayout
@@ -43,9 +44,9 @@
 
                 <NumberPicker
                     android:id="@+id/interval_picker_tens"
-
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:theme="@style/Theme.Sparki.NumberPicker"
 
                     android:layout_marginStart="@dimen/normal_padding"
                     android:layout_marginTop="@dimen/normal_padding"
@@ -55,6 +56,7 @@
                     android:id="@+id/interval_picker_ones"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:theme="@style/Theme.Sparki.NumberPicker"
 
                     android:layout_marginTop="@dimen/normal_padding"
                     android:layout_marginEnd="@dimen/normal_padding"
