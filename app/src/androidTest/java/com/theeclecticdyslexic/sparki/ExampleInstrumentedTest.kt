@@ -1,4 +1,4 @@
-package com.theeclecticdyslexic.batterychargeassistant
+package com.theeclecticdyslexic.sparki
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

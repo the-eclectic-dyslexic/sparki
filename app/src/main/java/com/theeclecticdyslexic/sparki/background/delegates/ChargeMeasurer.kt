@@ -1,12 +1,12 @@
-package com.theeclecticdyslexic.batterychargeassistant.background.delegates
+package com.theeclecticdyslexic.sparki.background.delegates
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
-import com.theeclecticdyslexic.batterychargeassistant.misc.Haltable
-import com.theeclecticdyslexic.batterychargeassistant.misc.*
+import com.theeclecticdyslexic.sparki.misc.Haltable
+import com.theeclecticdyslexic.sparki.misc.*
 import java.util.*
 
 class ChargeMeasurer : BroadcastReceiver(), Haltable {

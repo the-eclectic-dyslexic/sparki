@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/SettingsFragment"
-        android:name="com.theeclecticdyslexic.batterychargeassistant.ui.SettingsFragment"
+        android:name="com.theeclecticdyslexic.sparki.ui.SettingsFragment"
         android:label="@string/settings_fragment_label"
         tools:layout="@layout/settings_fragment">
 
@@ -23,20 +23,20 @@
     </fragment>
     <fragment
         android:id="@+id/HTTPRequestSettingsFragment"
-        android:name="com.theeclecticdyslexic.batterychargeassistant.ui.HTTPRequestSettingsFragment"
+        android:name="com.theeclecticdyslexic.sparki.ui.HTTPRequestSettingsFragment"
         android:label="@string/http_request_fragment_label"
         tools:layout="@layout/http_request_fragment">
     </fragment>
     <fragment
         android:id="@+id/ReminderSettingFragment"
-        android:name="com.theeclecticdyslexic.batterychargeassistant.ui.ReminderSettingsFragment"
+        android:name="com.theeclecticdyslexic.sparki.ui.ReminderSettingsFragment"
         android:label="@string/reminder_fragment_label"
         tools:layout="@layout/reminder_settings_fragment">
     </fragment>
     <fragment
         android:id="@+id/AlarmSettingsFragment"
-        android:name="com.theeclecticdyslexic.batterychargeassistant.ui.AlarmSettingsFragment"
-        android:label="Alarm Settings"
+        android:name="com.theeclecticdyslexic.sparki.ui.AlarmSettingsFragment"
+        android:label="@string/alarm_fragment_label"
         tools:layout="@layout/alarm_settings_fragment">
     </fragment>
 

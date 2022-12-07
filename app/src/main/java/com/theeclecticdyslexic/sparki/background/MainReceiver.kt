@@ -1,15 +1,15 @@
-package com.theeclecticdyslexic.batterychargeassistant.background
+package com.theeclecticdyslexic.sparki.background
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
-import com.theeclecticdyslexic.batterychargeassistant.background.delegates.AlarmSounder
-import com.theeclecticdyslexic.batterychargeassistant.background.delegates.ChargeMeasurer
-import com.theeclecticdyslexic.batterychargeassistant.background.delegates.GETRequester
-import com.theeclecticdyslexic.batterychargeassistant.background.delegates.ReminderSender
-import com.theeclecticdyslexic.batterychargeassistant.misc.*
+import com.theeclecticdyslexic.sparki.background.delegates.AlarmSounder
+import com.theeclecticdyslexic.sparki.background.delegates.ChargeMeasurer
+import com.theeclecticdyslexic.sparki.background.delegates.GETRequester
+import com.theeclecticdyslexic.sparki.background.delegates.ReminderSender
+import com.theeclecticdyslexic.sparki.misc.*
 
 
 object MainReceiver : BroadcastReceiver() {

@@ -1,4 +1,4 @@
-package com.theeclecticdyslexic.batterychargeassistant.ui
+package com.theeclecticdyslexic.sparki.ui
 
 import android.content.Context
 import android.content.Intent
@@ -13,13 +13,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.theeclecticdyslexic.batterychargeassistant.*
-import com.theeclecticdyslexic.batterychargeassistant.background.BackgroundService
-import com.theeclecticdyslexic.batterychargeassistant.background.MainReceiver
-import com.theeclecticdyslexic.batterychargeassistant.databinding.SettingsFragmentBinding
-import com.theeclecticdyslexic.batterychargeassistant.misc.NotificationHelper
-import com.theeclecticdyslexic.batterychargeassistant.misc.Settings
-import com.theeclecticdyslexic.batterychargeassistant.misc.Utils
+import com.theeclecticdyslexic.sparki.*
+import com.theeclecticdyslexic.sparki.background.BackgroundService
+import com.theeclecticdyslexic.sparki.background.MainReceiver
+import com.theeclecticdyslexic.sparki.databinding.SettingsFragmentBinding
+import com.theeclecticdyslexic.sparki.misc.NotificationHelper
+import com.theeclecticdyslexic.sparki.misc.Settings
+import com.theeclecticdyslexic.sparki.misc.Utils
 
 class SettingsFragment : Fragment() {
 

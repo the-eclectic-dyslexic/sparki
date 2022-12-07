@@ -1,4 +1,4 @@
-package com.theeclecticdyslexic.batterychargeassistant.background.delegates
+package com.theeclecticdyslexic.sparki.background.delegates
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -7,11 +7,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
-import com.theeclecticdyslexic.batterychargeassistant.misc.Haltable
-import com.theeclecticdyslexic.batterychargeassistant.misc.Action
-import com.theeclecticdyslexic.batterychargeassistant.misc.NotificationHelper
-import com.theeclecticdyslexic.batterychargeassistant.misc.Settings
-import com.theeclecticdyslexic.batterychargeassistant.misc.Utils
+import com.theeclecticdyslexic.sparki.misc.Haltable
+import com.theeclecticdyslexic.sparki.misc.Action
+import com.theeclecticdyslexic.sparki.misc.NotificationHelper
+import com.theeclecticdyslexic.sparki.misc.Settings
+import com.theeclecticdyslexic.sparki.misc.Utils
 
 class ReminderSender(context: Context) : BroadcastReceiver(), Haltable {
 

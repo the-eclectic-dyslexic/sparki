@@ -1,4 +1,4 @@
-package com.theeclecticdyslexic.batterychargeassistant.ui
+package com.theeclecticdyslexic.sparki.ui
 
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import android.widget.NumberPicker
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
-import com.theeclecticdyslexic.batterychargeassistant.databinding.AlarmSettingsFragmentBinding
-import com.theeclecticdyslexic.batterychargeassistant.misc.Settings
+import com.theeclecticdyslexic.sparki.databinding.AlarmSettingsFragmentBinding
+import com.theeclecticdyslexic.sparki.misc.Settings
 
 // TODO fix significant code duplication across this fragment (shared with settings and reminder settings)
 class AlarmSettingsFragment : Fragment() {

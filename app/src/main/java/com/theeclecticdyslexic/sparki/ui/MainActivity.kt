@@ -1,4 +1,4 @@
-package com.theeclecticdyslexic.batterychargeassistant.ui
+package com.theeclecticdyslexic.sparki.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -6,9 +6,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.theeclecticdyslexic.batterychargeassistant.R
-import com.theeclecticdyslexic.batterychargeassistant.misc.Settings
-import com.theeclecticdyslexic.batterychargeassistant.databinding.ActivityMainBinding
+import com.theeclecticdyslexic.sparki.R
+import com.theeclecticdyslexic.sparki.misc.Settings
+import com.theeclecticdyslexic.sparki.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 

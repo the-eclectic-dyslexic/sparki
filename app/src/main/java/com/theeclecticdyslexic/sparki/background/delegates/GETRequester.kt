@@ -1,4 +1,4 @@
-package com.theeclecticdyslexic.batterychargeassistant.background.delegates
+package com.theeclecticdyslexic.sparki.background.delegates
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -10,10 +10,10 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.theeclecticdyslexic.batterychargeassistant.misc.Haltable
-import com.theeclecticdyslexic.batterychargeassistant.misc.Permissions
-import com.theeclecticdyslexic.batterychargeassistant.misc.Settings
-import com.theeclecticdyslexic.batterychargeassistant.misc.Utils
+import com.theeclecticdyslexic.sparki.misc.Haltable
+import com.theeclecticdyslexic.sparki.misc.Permissions
+import com.theeclecticdyslexic.sparki.misc.Settings
+import com.theeclecticdyslexic.sparki.misc.Utils
 
 class GETRequester : Haltable {
 

@@ -1,4 +1,4 @@
-package com.theeclecticdyslexic.batterychargeassistant.misc
+package com.theeclecticdyslexic.sparki.misc
 
 import android.content.Context
 import android.content.pm.PackageManager

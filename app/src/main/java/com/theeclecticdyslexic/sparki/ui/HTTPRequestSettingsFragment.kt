@@ -1,4 +1,4 @@
-package com.theeclecticdyslexic.batterychargeassistant.ui
+package com.theeclecticdyslexic.sparki.ui
 
 import android.content.pm.PackageManager
 import android.os.Build
@@ -13,9 +13,9 @@ import android.widget.TableRow
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat.requestPermissions
 import com.google.android.material.textfield.TextInputEditText
-import com.theeclecticdyslexic.batterychargeassistant.R
-import com.theeclecticdyslexic.batterychargeassistant.databinding.HttpRequestFragmentBinding
-import com.theeclecticdyslexic.batterychargeassistant.misc.*
+import com.theeclecticdyslexic.sparki.R
+import com.theeclecticdyslexic.sparki.databinding.HttpRequestFragmentBinding
+import com.theeclecticdyslexic.sparki.misc.*
 import kotlin.math.roundToInt
 
 class HTTPRequestSettingsFragment : Fragment() {

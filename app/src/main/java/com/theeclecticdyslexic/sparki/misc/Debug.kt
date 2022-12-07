@@ -1,7 +1,6 @@
-package com.theeclecticdyslexic.batterychargeassistant.misc
+package com.theeclecticdyslexic.sparki.misc
 
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import java.net.HttpURLConnection
 import java.net.URL
 

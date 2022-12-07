@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:installLocation="internalOnly">
+    android:installLocation="internalOnly"
+    package="com.theeclecticdyslexic.sparki">
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
@@ -24,7 +24,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.BatteryChargeAssistant"
+        android:theme="@style/Theme.Sparki"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
@@ -36,7 +36,7 @@
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.BatteryChargeAssistant.NoActionBar">
+            android:theme="@style/Theme.Sparki.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -45,7 +45,7 @@
         </activity>
 
         <receiver
-            android:name="com.theeclecticdyslexic.batterychargeassistant.background.OnBootReceiver"
+            android:name="com.theeclecticdyslexic.sparki.background.OnBootReceiver"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
@@ -53,29 +53,6 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
                 <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
-            </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name=".background.MainReceiver"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
-                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
-
-                <action android:name="custom.intent.action.OVERRIDE_WATCHDOG" />
-                <action android:name="custom.intent.action.CHARGE_TARGET_REACHED" />
-                <action android:name="custom.intent.action.STOP_ALARM" />
-            </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name=".background.delegates.ChargeMeasurer"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.BATTERY_CHANGED"/>
             </intent-filter>
         </receiver>
     </application>

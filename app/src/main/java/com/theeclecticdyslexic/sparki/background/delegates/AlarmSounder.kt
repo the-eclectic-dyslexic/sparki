@@ -1,4 +1,4 @@
-package com.theeclecticdyslexic.batterychargeassistant.background.delegates
+package com.theeclecticdyslexic.sparki.background.delegates
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -13,8 +13,8 @@ import android.media.RingtoneManager
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.util.Log
-import com.theeclecticdyslexic.batterychargeassistant.misc.Haltable
-import com.theeclecticdyslexic.batterychargeassistant.misc.*
+import com.theeclecticdyslexic.sparki.misc.Haltable
+import com.theeclecticdyslexic.sparki.misc.*
 
 class AlarmSounder(context: Context) : BroadcastReceiver(), Haltable {
     private val ringer: Ringtone

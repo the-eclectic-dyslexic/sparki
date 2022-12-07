@@ -1,4 +1,4 @@
-package com.theeclecticdyslexic.batterychargeassistant.misc
+package com.theeclecticdyslexic.sparki.misc
 
 data class HTTPRequest(
     val ssid: String,

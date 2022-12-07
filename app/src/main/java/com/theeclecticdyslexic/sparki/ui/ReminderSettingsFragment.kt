@@ -1,4 +1,4 @@
-package com.theeclecticdyslexic.batterychargeassistant.ui
+package com.theeclecticdyslexic.sparki.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,9 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.NumberPicker
-import androidx.appcompat.app.AppCompatActivity
-import com.theeclecticdyslexic.batterychargeassistant.misc.Settings
-import com.theeclecticdyslexic.batterychargeassistant.databinding.ReminderSettingsFragmentBinding
+import com.theeclecticdyslexic.sparki.misc.Settings
+import com.theeclecticdyslexic.sparki.databinding.ReminderSettingsFragmentBinding
 
 
 class ReminderSettingsFragment : Fragment() {

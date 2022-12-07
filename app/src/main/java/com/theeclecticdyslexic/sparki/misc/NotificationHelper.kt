@@ -1,11 +1,11 @@
-package com.theeclecticdyslexic.batterychargeassistant.misc
+package com.theeclecticdyslexic.sparki.misc
 
 import android.app.*
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
-import com.theeclecticdyslexic.batterychargeassistant.R
-import com.theeclecticdyslexic.batterychargeassistant.ui.MainActivity
+import com.theeclecticdyslexic.sparki.R
+import com.theeclecticdyslexic.sparki.ui.MainActivity
 
 object NotificationHelper {
 
