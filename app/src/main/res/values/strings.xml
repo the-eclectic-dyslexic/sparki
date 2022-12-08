@@ -2,7 +2,7 @@
     <string name="app_name">Sparki</string>
 
     <!-- Strings used for fragments for navigation -->
-    <string name="settings_fragment_label">Sparki - General Settings</string>
+    <string name="settings_fragment_label">Sparki - Settings</string>
     <string name="reminder_fragment_label">Sparki - Reminder Settings</string>
     <string name="alarm_fragment_label">Sparki - Alarm Settings</string>
     <string name="http_request_fragment_label">Sparki - HTTP Request Settings</string>
@@ -43,7 +43,9 @@
     <string name="permission_explainer">Unfortunately, Sparki can\'t know which WiFi network your device is on without location permissions being granted all the time. The poor old boy\'s eyesight and memory aren\'t very good. If you withhold location permissions only entries with an empty <b>SSID</b> entry will work.\n\nDon\'t worry though, Sparki doesn\'t collect any of your data (location or otherwise). You, or anyone else, can confirm that for yourselves, as Sparki\'s code is open source and <a href="https://github.com/the-eclectic-dyslexic/sparki">available on GitHub</a>.</string>
     <string name="give_permission">Give Permission</string>
     <string name="background_pitch">Don\'t forget Sparki needs location permissions while running in the background as well!</string>
-    <string name="general_settings">Settings</string>
+    <string name="general_settings">General Settings</string>
+    <string name="ui_theme_dropdown">UI Theme dropdown</string>
+    <string name="ui_theme">UI Theme</string>
 
 
 </resources>

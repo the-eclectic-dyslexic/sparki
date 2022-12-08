@@ -22,8 +22,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/fab_margin"
-            android:paddingEnd="@dimen/fab_margin"
+            android:layout_marginHorizontal="@dimen/fab_margin"
             android:paddingBottom="@dimen/title_padding"
             android:orientation="vertical">
 
@@ -51,6 +50,35 @@
                 android:text="@string/enable_notification_controls"
                 android:textSize="16sp" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="?attr/colorOnSecondary"
+                    android:layout_margin="@dimen/normal_padding"
+
+                    android:text="@string/ui_theme" />
+
+                <Spinner
+                    android:id="@+id/theme_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|end"
+                    android:contentDescription="@string/ui_theme_dropdown"
+                    android:backgroundTint="?attr/colorPrimary"
+                    android:spinnerMode="dropdown"
+                    android:outlineProvider="bounds"
+                    android:popupBackground="?attr/colorTertiary"
+                    android:minHeight="48dp" />
+            </LinearLayout>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -63,6 +91,7 @@
                 android:textColor="?attr/colorOnSecondary"
                 android:text="@string/target_battery_charge_level"
                 android:textSize="16sp" />
+
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -8,8 +8,11 @@ import android.os.PowerManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -19,6 +22,7 @@ import com.theeclecticdyslexic.sparki.background.MainReceiver
 import com.theeclecticdyslexic.sparki.databinding.SettingsFragmentBinding
 import com.theeclecticdyslexic.sparki.misc.NotificationHelper
 import com.theeclecticdyslexic.sparki.misc.Settings
+import com.theeclecticdyslexic.sparki.misc.Themes
 import com.theeclecticdyslexic.sparki.misc.Utils
 
 class SettingsFragment : Fragment() {
@@ -41,6 +45,7 @@ class SettingsFragment : Fragment() {
         initBatterTargetSeeker()
         initAllSwitches()
         initButtons()
+        initSpinner()
 
         if(BackgroundService.needsToStart(context)){
             initService()
@@ -66,6 +71,33 @@ class SettingsFragment : Fragment() {
             action = BackgroundService::class.java.name
         }
         requireContext().stopService(intent)
+    }
+
+    private fun initSpinner() {
+        val context = requireContext()
+        val values = Themes.values().map {it.toString()}
+        val adapter = ArrayAdapter(context, R.layout.spinner_item_inline, values)
+        adapter.setDropDownViewResource(R.layout.spinner_item)
+
+        binding.themeSpinner.adapter = adapter
+        val currentTheme = Settings.UITheme.retrieve(context)
+        val position = Themes.idMap[currentTheme]?.ordinal ?: Themes.System.ordinal
+        binding.themeSpinner.setSelection(position)
+        binding.themeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                val name = parent.getItemAtPosition(position).toString()
+                val theme = Themes.valueOf(name).id
+                Settings.UITheme.store(context, theme)
+                AppCompatDelegate.setDefaultNightMode(theme)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
     }
 
     private fun initButtons() {

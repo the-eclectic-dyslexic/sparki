@@ -2,6 +2,7 @@ package com.theeclecticdyslexic.sparki.misc
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.google.gson.Gson
 
 object Settings {
@@ -18,6 +19,7 @@ object Settings {
 
         editor.putBoolean(Enabled.javaClass.name, Enabled.default)
         editor.putBoolean(ControlsEnabled.javaClass.name, ControlsEnabled.default)
+        editor.putInt(UITheme.javaClass.name, UITheme.default)
         editor.putInt(ChargeTarget.javaClass.name, ChargeTarget.default)
 
         editor.putBoolean(ReminderEnabled.javaClass.name, ReminderEnabled.default)
@@ -46,6 +48,15 @@ object Settings {
         fun retrieve(context: Context) =
             getPrefs(context).getBoolean(this.javaClass.name, this.default)
 
+    }
+    object UITheme {
+        const val default = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+        fun retrieve(context: Context) =
+            getPrefs(context).getInt(this.javaClass.name, this.default)
+        fun store(context: Context, setting: Int) =
+            getPrefs(context).edit()
+                .putInt(this.javaClass.name, setting)
+                .apply()
     }
     object ChargeTarget {
         const val default = 80
