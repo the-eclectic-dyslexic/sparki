@@ -245,6 +245,7 @@ class SettingsFragment : Fragment() {
                 Permissions.post,
                 Permissions.REQUEST_POST_PERMISSION
             )
+            window.dismiss()
         }
         val dismiss = popupView.findViewById<Button>(R.id.dismiss)
         dismiss.setOnClickListener { window.dismiss() }
