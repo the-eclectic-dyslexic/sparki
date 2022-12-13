@@ -80,7 +80,7 @@ class SettingsFragment : Fragment() {
         val intent = Intent(requireContext(), ForegroundService::class.java).apply{
             action = ForegroundService::class.java.name
         }
-        requireContext().startService(intent)
+        requireContext().startForegroundService(intent)
     }
 
     private fun dismantleService() {
@@ -227,7 +227,7 @@ class SettingsFragment : Fragment() {
 
     private fun makeNotificationPermissionPopup() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
-        if (!Permissions.postGranted(requireContext())) return
+        if (Permissions.postGranted(requireContext())) return
 
         val popupView = layoutInflater.inflate(R.layout.popup_notification_permission, null)
         val window = PopupWindow(

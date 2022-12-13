@@ -25,6 +25,6 @@ class OnBootReceiver : BroadcastReceiver() {
         }
 
         val needToStart = ForegroundService.needsToStart(context)
-        if (needToStart) context.startService(backgroundIntent)
+        if (needToStart) context.startForegroundService(backgroundIntent)
     }
 }

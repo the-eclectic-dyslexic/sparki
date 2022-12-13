@@ -30,9 +30,8 @@ class ForegroundService : Service() {
 
         fun shouldBeRunning(context: Context): Boolean {
             val enabled = Settings.Enabled.retrieve(context)
-            val granted = Permissions.postGranted(context)
 
-            return  enabled && granted && Utils.canComplete(context)
+            return  enabled && Utils.canComplete(context)
         }
 
         fun needsToStop(context: Context): Boolean {

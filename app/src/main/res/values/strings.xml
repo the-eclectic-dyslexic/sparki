@@ -49,6 +49,10 @@
     <string name="alarm_will_timeout">Alarm will timeout</string>
     <string name="repeat_reminders_if_missed">Repeat Reminders if missed</string>
     <string name="send_more_than_one_reminder">Keep reminding me until I notice</string>
+    <string name="notification_pitch">Sparki needs to be given notification permissions to:</string>
+    <string name="notification_pitch1">show you when he is working in the background</string>
+    <string name="notification_pitch2">inform you when the battery has charged</string>
+    <string name="notification_pitch3">enable in-notification controls</string>
 
 
 </resources>

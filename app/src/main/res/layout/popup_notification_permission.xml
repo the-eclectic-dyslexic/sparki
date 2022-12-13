@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:text="Sparki needs to be given notification permissions to:"/>
+            android:text="@string/notification_pitch"/>
         <TableLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -30,8 +30,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textSize="@dimen/text_size"
-                    android:text="run in the background, due to limitations of android services" />
+                    android:text="@string/notification_pitch1" />
             </TableRow>
+
             <TableRow>
                 <ImageView
                     android:src="@drawable/ic_circle"
@@ -43,8 +44,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textSize="@dimen/text_size"
-                    android:text="inform you when the battery has charged" />
+                    android:text="@string/notification_pitch2" />
             </TableRow>
+
             <TableRow>
                 <ImageView
                     android:src="@drawable/ic_circle"
@@ -56,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textSize="@dimen/text_size"
-                    android:text="let you put him down for a nap if you want your battery to charge to 100%" />
+                    android:text="@string/notification_pitch3" />
             </TableRow>
         </TableLayout>
 
