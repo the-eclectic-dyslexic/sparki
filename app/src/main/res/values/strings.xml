@@ -55,6 +55,7 @@
     <string name="notification_pitch3">enable in-notification controls</string>
     <string name="not_now">Not Now</string>
     <string name="cont">Continue</string>
+    <string name="workaround_pitch">Make sure to enable background location, it is the only way Sparki will know what network you are on while the screen is off.</string>
 
 
 </resources>
