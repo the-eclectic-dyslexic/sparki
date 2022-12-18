@@ -10,8 +10,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
 import android.util.Log
-import android.view.View
-import android.widget.NumberPicker
 import java.net.HttpURLConnection
 import java.net.URL
 

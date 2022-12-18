@@ -6,16 +6,12 @@
 package com.theeclecticdyslexic.sparki.ui
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
-import android.widget.NumberPicker
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SwitchCompat
 import com.theeclecticdyslexic.sparki.databinding.FragmentAlarmSettingsBinding
 import com.theeclecticdyslexic.sparki.extensions.init
 import com.theeclecticdyslexic.sparki.extensions.show

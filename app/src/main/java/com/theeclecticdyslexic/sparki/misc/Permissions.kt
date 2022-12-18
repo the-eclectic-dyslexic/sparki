@@ -42,7 +42,8 @@ object Permissions {
     fun locationGranted(context: Context) = location.granted(context)
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    fun backgroundLocationGranted(context: Context) = (location + backgroundLocation).granted(context)
+    fun backgroundLocationGranted(context: Context) :Boolean =
+        (location + backgroundLocation).granted(context)
 
     fun onlyForegroundGranted(context: Context): Boolean {
         val location = locationGranted(context)
