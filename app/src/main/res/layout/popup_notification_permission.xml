@@ -76,14 +76,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/normal_padding"
                 android:layout_weight="1"
-                android:text="Grant" />
+                android:text="@string/cont" />
 
             <Button
                 android:id="@+id/dismiss"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Dismiss" />
+                android:text="@string/not_now" />
         </LinearLayout>
     </LinearLayout>
 

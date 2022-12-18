@@ -136,6 +136,25 @@
                     android:layout_margin="@dimen/normal_padding"
                     android:text="@string/give_permission" />
             </LinearLayout>
+            <LinearLayout
+                android:id="@+id/location_workaround_pitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_margin="@dimen/normal_padding"
+                    android:text="Make sure to enable background location, it is the only way Sparki will know what network you are on while the screen is off."/>
+
+                <Button
+                    android:id="@+id/location_permission_button_workaround"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/normal_padding"
+                    android:text="Okay" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

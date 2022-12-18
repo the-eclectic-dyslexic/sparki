@@ -5,15 +5,17 @@
 
 package com.theeclecticdyslexic.sparki.ui
 
+import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TableLayout
 import android.widget.TableRow
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat.requestPermissions
+import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import com.theeclecticdyslexic.sparki.R
 import com.theeclecticdyslexic.sparki.databinding.FragmentHttpRequestBinding
@@ -42,6 +44,8 @@ class HTTPRequestSettingsFragment : Fragment() {
         initTextInputs()
         initAddButton()
         initLocationPermissionButton()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+            initLocationPermissionButtonWorkaround()
 
         return binding.root
     }
@@ -54,7 +58,8 @@ class HTTPRequestSettingsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        decideWhetherToShowLocationPermissionPitch()
+        handleShowLocationPermissionPitch()
+        handleShowLocationWorkAroundPitch()
     }
 
     private fun buildEntriesFromIds() : Array<HTTPRequest> {
@@ -124,7 +129,7 @@ class HTTPRequestSettingsFragment : Fragment() {
         parent.removeView(this)
     }
 
-    private fun decideWhetherToShowLocationPermissionPitch() {
+    private fun handleShowLocationPermissionPitch() {
         val context = requireContext()
 
         val granted = Permissions.locationGranted(context)
@@ -132,12 +137,40 @@ class HTTPRequestSettingsFragment : Fragment() {
         binding.locationPitch.show(!granted)
     }
 
+    private fun handleShowLocationWorkAroundPitch() {
+        val context = requireContext()
+
+        val partiallyGranted = Permissions.onlyForegroundGranted(context)
+
+        binding.locationWorkaroundPitch.show(partiallyGranted)
+    }
+
     private fun initLocationPermissionButton() {
         binding.locationPermissionButton.setOnClickListener {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R &&
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                requestPermissions(
+                    this.requireActivity(),
+                    Permissions.location + Permissions.backgroundLocation,
+                    Permissions.REQUEST_LOCATION_AND_WIFI_PERMISSION
+                )
+            } else {
+                requestPermissions(
+                    this.requireActivity(),
+                    Permissions.location,
+                    Permissions.REQUEST_LOCATION_AND_WIFI_PERMISSION
+                )
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun initLocationPermissionButtonWorkaround() {
+        binding.locationPermissionButtonWorkaround.setOnClickListener {
             requestPermissions(
                 this.requireActivity(),
-                Permissions.location,
-                Permissions.REQUEST_LOCATION_AND_WIFI_PERMISSION
+                Permissions.backgroundLocation,
+                Permissions.REQUEST_BACKGROUND_LOCATION_WORKAROUND
             )
         }
     }

@@ -16,7 +16,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
@@ -70,7 +69,7 @@ class SettingsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        decideWhetherToShowOptimizerPitch()
+        handleShowOptimizerPitch()
 
         val context = requireContext()
         if (ForegroundService.needsToStart(context)) initService()
@@ -262,7 +261,7 @@ class SettingsFragment : Fragment() {
                 && Utils.canComplete(context)
     }
 
-    private fun decideWhetherToShowOptimizerPitch() {
+    private fun handleShowOptimizerPitch() {
         val context = requireContext()
         val mgr = context.getSystemService(Context.POWER_SERVICE) as PowerManager
 

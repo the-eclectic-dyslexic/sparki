@@ -53,6 +53,8 @@
     <string name="notification_pitch1">show you when he is working in the background</string>
     <string name="notification_pitch2">inform you when the battery has charged</string>
     <string name="notification_pitch3">enable in-notification controls</string>
+    <string name="not_now">Not Now</string>
+    <string name="cont">Continue</string>
 
 
 </resources>

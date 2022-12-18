@@ -30,19 +30,8 @@ class HttpGetRequester : ChargeTargetReachedDelegate {
     override fun cancel(context: Context) {}
 
     private fun sendGETRequests(context: Context) {
-        val ssid =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                getNetworkSSID(context)
-            } else {
-                deprecated.getNetworkSSID(context)
-            }
 
-        val options = if (Permissions.locationGranted(context)) {
-            val sanitized = Utils.sanitizeSSID(ssid)
-            listOf(sanitized, "")
-        } else {
-            listOf("")
-        }
+        val options = validSSIDOptions(context)
 
         val requests = Settings.HTTPRequestList.retrieve(context)
         requests.filter { it.ssid in options }
@@ -50,6 +39,30 @@ class HttpGetRequester : ChargeTargetReachedDelegate {
             .map { it.url }
             .forEach(Utils::sendHTTPGET)
     }
+
+    private fun validSSIDOptions(context: Context): List<String> {
+        val granted = canAskForSSID(context)
+        val ssid = if (granted) getSSID(context) else null
+        return listOfNotNull(ssid, "")
+    }
+
+    private fun getSSID(context: Context): String {
+        val raw =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                getNetworkSSID(context)
+            } else {
+                deprecated.getNetworkSSID(context)
+            }
+        return Utils.sanitizeSSID(raw)
+    }
+
+    private fun canAskForSSID(context: Context): Boolean =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Permissions.backgroundLocationGranted(context)
+        } else {
+            Permissions.locationGranted(context)
+        }
+
 
     @RequiresApi(Build.VERSION_CODES.S)
     private fun getNetworkSSID(context: Context): String {
