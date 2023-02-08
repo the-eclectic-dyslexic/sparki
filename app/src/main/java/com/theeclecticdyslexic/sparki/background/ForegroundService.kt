@@ -8,7 +8,6 @@ package com.theeclecticdyslexic.sparki.background
 import android.app.*
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import com.theeclecticdyslexic.sparki.misc.*
@@ -30,9 +29,8 @@ class ForegroundService : Service() {
 
         fun shouldBeRunning(context: Context): Boolean {
             val enabled = Settings.Enabled.retrieve(context)
-            val granted = Permissions.postGranted(context)
 
-            return  enabled && granted && Utils.canComplete(context)
+            return  enabled && Utils.canComplete(context)
         }
 
         fun needsToStop(context: Context): Boolean {

@@ -6,6 +6,8 @@
 package com.theeclecticdyslexic.sparki.misc
 
 import android.util.Log
+import com.theeclecticdyslexic.sparki.extensions.head
+import com.theeclecticdyslexic.sparki.extensions.tail
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -23,8 +25,10 @@ import java.net.URL
  * with the debug information needed in the get parameters. This allows continuously logging
  * what is happening on the device throughout a day, regardless of if wireless debugging is still
  * running. Meaning, only an http server needs to be running, and the device can be used normally
- * throughout a typical day while still receiving debug/logging information
+ * without having to pay attention to the sometimes tenuous connection between the device and IDE.
  */
+
+typealias GetParam = Pair<String, Any>
 
 object Debug {
 
@@ -32,41 +36,68 @@ object Debug {
     // having logging over the local network is the only way I have found to consistently log while testing the app with real world usage
     // If you change this please don't commit and send a pull request for that change without good reason!
     // a good reason might be to make the address something pulled from outside the versioned files but has a default fallback
-    private const val BASE_URL = "http://10.0.0.11:8000/"
+    private const val SERVER_IP_AND_PORT = "10.0.0.175:8000"
+    private const val BASE_URL = "http://$SERVER_IP_AND_PORT/"
     private const val REST_LOGGING = false
 
 
     fun logOverHTTP(label: String, param: Any = "") = logOverHTTP(Pair(label, param))
 
-    fun logOverHTTP(vararg params: Pair<String, Any>) {
+    fun logOverHTTP(vararg params: GetParam) {
         if (!REST_LOGGING) return
+
+        val saneParams = params.map { it.replaceSpaces() }
+        val url = buildUrl(saneParams)
+
+        val thread = buildRequestThread(url)
+        thread.start()
+    }
+
+    private fun buildRequestThread(url: URL) : Thread {
+        val runnable = Runnable {
+            val connection = url.openConnection() as HttpURLConnection
+            connection.setRequestProperty("User-Agent", "Android Application:")
+            connection.setRequestProperty("Connection", "close")
+            connection.connectTimeout = 1000 * 30
+            try {
+                connection.connect()
+                Log.d("response from $url", connection.responseCode.toString())
+            } catch(e : Exception) {
+                Log.d("exception encounter ", e.toString())
+            }
+            finally {
+                connection.disconnect()
+            }
+        }
+        return Thread(runnable)
+    }
+
+    private fun buildUrl(params: List<GetParam>): URL {
+        if (params.isEmpty()) {
+            return URL(BASE_URL)
+        }
 
         val sb = StringBuilder()
         sb.append(BASE_URL)
-        for ((label, param) in params) {
-            sb.append("?$label=$param")
+
+        params.head.let {
+            (label, value) -> sb.append("?$label=$value")
         }
-        val url = URL(sb.toString())
-        fun buildRunnable() : Runnable {
-            return Runnable {
-                val connection : HttpURLConnection = url.openConnection() as HttpURLConnection
-                connection.setRequestProperty("User-Agent", "Android Application:")
-                connection.setRequestProperty("Connection", "close")
-                connection.connectTimeout = 1000 * 30
-                try {
-                    connection.connect()
-                    Log.d("response from $url", connection.responseCode.toString())
-                } catch(e : Exception) {
-                    // do nothing
-                    Log.d("exception encounter ", e.toString())
-                }
-                finally {
-                    connection.disconnect()
-                }
-            }
+        params.tail.forEach {
+            (label, value) -> sb.append("&$label=$value")
         }
 
-        val thread = Thread(buildRunnable())
-        thread.start()
+        return URL(sb.toString())
     }
+
+    private fun GetParam.replaceSpaces(): GetParam {
+        val (label, value) = this
+        return GetParam(
+            label.replaceSpaces(),
+            value.toString().replaceSpaces()
+        )
+    }
+
+    private fun String.replaceSpaces(): String =
+        this.replace(' ', '_')
 }

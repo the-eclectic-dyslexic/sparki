@@ -16,7 +16,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
@@ -29,6 +28,7 @@ import com.theeclecticdyslexic.sparki.background.MainReceiver
 import com.theeclecticdyslexic.sparki.databinding.FragmentSettingsBinding
 import com.theeclecticdyslexic.sparki.extensions.init
 import com.theeclecticdyslexic.sparki.extensions.show
+import com.theeclecticdyslexic.sparki.extensions.showReserveSpace
 import com.theeclecticdyslexic.sparki.misc.*
 
 /**
@@ -70,7 +70,7 @@ class SettingsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        decideWhetherToShowOptimizerPitch()
+        handleShowOptimizerPitch()
 
         val context = requireContext()
         if (ForegroundService.needsToStart(context)) initService()
@@ -80,7 +80,7 @@ class SettingsFragment : Fragment() {
         val intent = Intent(requireContext(), ForegroundService::class.java).apply{
             action = ForegroundService::class.java.name
         }
-        requireContext().startService(intent)
+        requireContext().startForegroundService(intent)
     }
 
     private fun dismantleService() {
@@ -118,16 +118,18 @@ class SettingsFragment : Fragment() {
     }
 
     private fun initButtons() {
-        initNavButton(binding.buttonReminderSettings,    R.id.ReminderSettingFragment)
-        initNavButton(binding.buttonAlarmSettings,       R.id.AlarmSettingsFragment)
-        initNavButton(binding.buttonHttpRequestSettings, R.id.HTTPRequestSettingsFragment)
+        val context = requireContext()
+        initNavButton(binding.buttonReminderSettings,    R.id.ReminderSettingFragment,     Settings.RemindersEnabled.retrieve(context))
+        initNavButton(binding.buttonAlarmSettings,       R.id.AlarmSettingsFragment,       Settings.AlarmEnabled.retrieve(context))
+        initNavButton(binding.buttonHttpRequestSettings, R.id.HTTPRequestSettingsFragment, Settings.HTTPRequestsEnabled.retrieve(context))
 
         initOptimizationSettingsButton()
     }
-    private fun initNavButton(button: ImageButton, location: Int) {
+    private fun initNavButton(button: ImageButton, location: Int, active: Boolean) {
         button.setOnClickListener{
             findNavController().navigate(location)
         }
+        button.showReserveSpace(active)
     }
 
     private fun initBatterTargetSeeker() {
@@ -188,9 +190,9 @@ class SettingsFragment : Fragment() {
 
         initSwitch(context, binding.enableAppSwitch, Settings.Enabled)
 
-        initSwitch(context, binding.enableReminders, Settings.RemindersEnabled)
-        initSwitch(context, binding.enableSoundAlarm, Settings.AlarmEnabled)
-        initSwitch(context, binding.enableHttpRequests, Settings.HTTPRequestsEnabled)
+        initChargeSettingSwitch(context, binding.enableReminders, Settings.RemindersEnabled, binding.buttonReminderSettings)
+        initChargeSettingSwitch(context, binding.enableSoundAlarm, Settings.AlarmEnabled, binding.buttonAlarmSettings)
+        initChargeSettingSwitch(context, binding.enableHttpRequests, Settings.HTTPRequestsEnabled, binding.buttonHttpRequestSettings)
     }
 
     private fun initSwitch(context: Context, switch: SwitchCompat, setting: Settings.BooleanSetting) {
@@ -198,6 +200,20 @@ class SettingsFragment : Fragment() {
                 _, isChecked ->
             makeNotificationPermissionPopup()
             setting.store(context, isChecked)
+            when {
+                ForegroundService.needsToStart(context) -> initService()
+                ForegroundService.needsToStop(context) -> dismantleService()
+            }
+        }
+        switch.init(context, setting, listener)
+    }
+
+    private fun initChargeSettingSwitch(context: Context, switch: SwitchCompat, setting: Settings.BooleanSetting, buttonToHide: ImageButton) {
+        val listener = CompoundButton.OnCheckedChangeListener {
+                _, isChecked ->
+            makeNotificationPermissionPopup()
+            setting.store(context, isChecked)
+            buttonToHide.showReserveSpace(isChecked)
             when {
                 ForegroundService.needsToStart(context) -> initService()
                 ForegroundService.needsToStop(context) -> dismantleService()
@@ -227,7 +243,7 @@ class SettingsFragment : Fragment() {
 
     private fun makeNotificationPermissionPopup() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
-        if (!Permissions.postGranted(requireContext())) return
+        if (Permissions.postGranted(requireContext())) return
 
         val popupView = layoutInflater.inflate(R.layout.popup_notification_permission, null)
         val window = PopupWindow(
@@ -245,6 +261,7 @@ class SettingsFragment : Fragment() {
                 Permissions.post,
                 Permissions.REQUEST_POST_PERMISSION
             )
+            window.dismiss()
         }
         val dismiss = popupView.findViewById<Button>(R.id.dismiss)
         dismiss.setOnClickListener { window.dismiss() }
@@ -261,7 +278,7 @@ class SettingsFragment : Fragment() {
                 && Utils.canComplete(context)
     }
 
-    private fun decideWhetherToShowOptimizerPitch() {
+    private fun handleShowOptimizerPitch() {
         val context = requireContext()
         val mgr = context.getSystemService(Context.POWER_SERVICE) as PowerManager
 

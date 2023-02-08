@@ -40,7 +40,7 @@
     <string name="repeat_reminders">Send repeat reminders every</string>
     <string name="take_me_to_the_optimizer">Take Me To The Optimizer Settings</string>
     <string name="battery_optimizer_explanation">Sometimes Sparki will be prevented from running in the background by your device. If you are having trouble, either with Sparki not reminding you when the battery is charged or Sparki not properly starting when you reboot your device, first take a look at the battery optimizer and make sure Sparki is not being optimized.\n\n<i>Don\'t worry too much about the battery life impact; Sparki doesn\'t work too hard and when he does it\'s almost exclusively while the battery is charging.</i></string>
-    <string name="permission_explainer">Unfortunately, Sparki can\'t know which WiFi network your device is on without location permissions being granted \"while using the app\". The poor old boy\'s eyesight and memory aren\'t very good. If you withhold location permissions only entries with an empty <b>SSID</b> entry will work.\n\nDon\'t worry though, Sparki doesn\'t collect any of your data (location or otherwise). You, or anyone else, can confirm that for yourselves, as Sparki\'s code is open source and <a href="https://github.com/the-eclectic-dyslexic/sparki">available on GitHub</a>.</string>
+    <string name="permission_explainer">Unfortunately, Sparki can\'t know which WiFi network your device is on without location permissions being granted, so he can ask android. The poor old boy\'s eyesight isn\'t very good, and unfortunately can\'t see you have put him down beside the same plug you always do. If you withhold location permissions only entries with an empty <b>SSID</b> entry will work.\n\nDon\'t worry though, Sparki doesn\'t collect any of your data (location or otherwise). You, or anyone else, can confirm that for yourselves, as Sparki\'s code is open source and <a href="https://github.com/the-eclectic-dyslexic/sparki">available on GitHub</a>.</string>
     <string name="give_permission">Give Permission</string>
     <string name="background_pitch">Don\'t forget Sparki needs location permissions while running in the background as well!</string>
     <string name="general_settings">General Settings</string>
@@ -49,6 +49,13 @@
     <string name="alarm_will_timeout">Alarm will timeout</string>
     <string name="repeat_reminders_if_missed">Repeat Reminders if missed</string>
     <string name="send_more_than_one_reminder">Keep reminding me until I notice</string>
+    <string name="notification_pitch">Sparki needs to be given notification permissions to:</string>
+    <string name="notification_pitch1">show you when he is working in the background</string>
+    <string name="notification_pitch2">inform you when the battery has charged</string>
+    <string name="notification_pitch3">enable in-notification controls</string>
+    <string name="not_now">Not Now</string>
+    <string name="cont">Continue</string>
+    <string name="workaround_pitch">Make sure to enable background location, it is the only way Sparki will know what network you are on while the screen is off.</string>
 
 
 </resources>
