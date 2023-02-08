@@ -25,7 +25,14 @@ object Permissions {
     val location : PermissionSet =
         arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION,
                 android.Manifest.permission.ACCESS_COARSE_LOCATION,
-                android.Manifest.permission.ACCESS_WIFI_STATE)
+                android.Manifest.permission.ACCESS_WIFI_STATE) +
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            arrayOf(android.Manifest.permission.CHANGE_NETWORK_STATE,
+                    android.Manifest.permission.ACCESS_NETWORK_STATE)
+        } else {
+            arrayOf()
+        }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     val post : PermissionSet = arrayOf(
@@ -41,15 +48,18 @@ object Permissions {
 
     fun locationGranted(context: Context) = location.granted(context)
 
-    @RequiresApi(Build.VERSION_CODES.Q)
-    fun backgroundLocationGranted(context: Context) :Boolean =
-        (location + backgroundLocation).granted(context)
+    fun backgroundLocationGranted(context: Context) :Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return (location + backgroundLocation).granted(context)
+        }
+
+        return location.granted(context)
+    }
+
 
     fun onlyForegroundGranted(context: Context): Boolean {
         val location = locationGranted(context)
-        val background =
-                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
-                    backgroundLocationGranted(context)
+        val background = backgroundLocationGranted(context)
         return location && !background
     }
 

@@ -36,7 +36,7 @@ object Debug {
     // having logging over the local network is the only way I have found to consistently log while testing the app with real world usage
     // If you change this please don't commit and send a pull request for that change without good reason!
     // a good reason might be to make the address something pulled from outside the versioned files but has a default fallback
-    private const val SERVER_IP_AND_PORT = "10.0.0.11:8000"
+    private const val SERVER_IP_AND_PORT = "10.0.0.175:8000"
     private const val BASE_URL = "http://$SERVER_IP_AND_PORT/"
     private const val REST_LOGGING = false
 

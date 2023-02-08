@@ -141,7 +141,6 @@ class HTTPRequestSettingsFragment : Fragment() {
         val context = requireContext()
 
         val partiallyGranted = Permissions.onlyForegroundGranted(context)
-
         binding.locationWorkaroundPitch.show(partiallyGranted)
     }
 

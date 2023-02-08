@@ -12,3 +12,9 @@ fun View.show(shouldShow: Boolean) {
         if (shouldShow) View.VISIBLE
         else            View.GONE
 }
+
+fun View.showReserveSpace(shouldShow: Boolean) {
+    visibility =
+        if (shouldShow) View.VISIBLE
+        else            View.INVISIBLE
+}

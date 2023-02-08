@@ -3,19 +3,29 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+def keystorePropertiesFile = rootProject.file("keystore.properties");
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+def store =  file(keystoreProperties['storeFile'])
+def pass =  keystoreProperties['storePassword']
+def key = keystoreProperties['keyAlias']
+def keyPass = keystoreProperties['keyPassword']
+
 android {
     signingConfigs {
         debug {
-            storeFile file('/mnt/Documents/the_eclectic_dyslexic.jks')
-            storePassword '%ys`vfZkJ<zJlW|fX`yhUWEwp6<QW|'
-            keyPassword '%ys`vfZkJ<zJlW|fX`yhUWEwp6<QW|'
-            keyAlias 'ted_key'
+            storeFile store
+            storePassword pass
+            keyAlias key
+            keyPassword keyPass
         }
+
         release {
-            storeFile file('/mnt/Documents/the_eclectic_dyslexic.jks')
-            keyAlias 'ted_key'
-            storePassword '%ys`vfZkJ<zJlW|fX`yhUWEwp6<QW|'
-            keyPassword '%ys`vfZkJ<zJlW|fX`yhUWEwp6<QW|'
+            storeFile store
+            storePassword pass
+            keyAlias key
+            keyPassword keyPass
         }
     }
     compileSdk 33

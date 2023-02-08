@@ -147,7 +147,7 @@
                         android:contentDescription="@string/edit_reminder_button_text"
                         app:tint="?attr/colorPrimary"
                         android:padding="@dimen/normal_padding"
-                        android:src="@drawable/ic_baseline_edit_24" />
+                        android:src="@drawable/ic_settings_cog" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/enable_reminders"
@@ -172,7 +172,7 @@
                         android:contentDescription="@string/edit_alarm_button_text"
                         android:padding="@dimen/normal_padding"
                         app:tint="?attr/colorPrimary"
-                        android:src="@drawable/ic_baseline_edit_24" />
+                        android:src="@drawable/ic_settings_cog" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/enable_sound_alarm"
@@ -198,7 +198,7 @@
                         android:contentDescription="@string/edit_http_request_button_text"
                         android:padding="@dimen/normal_padding"
                         app:tint="?attr/colorPrimary"
-                        android:src="@drawable/ic_baseline_edit_24" />
+                        android:src="@drawable/ic_settings_cog" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/enable_http_requests"
