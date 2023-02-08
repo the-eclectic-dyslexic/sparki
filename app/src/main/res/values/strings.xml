@@ -27,7 +27,7 @@
     <string name="ssid_hint">ex: MyHomeWifi</string>
     <string name="ssid_explainer"><b>SSID</b> is the name of the Wifi network your device will be on while charging.\n\nLeaving this blank will let Sparki message the associated <b>URL</b> no matter what WiFi network your device is on… even over data.\n\n<i>Leaving SSID blank is not recommended, as Sparki might message devices you didn\'t intend him to.</i></string>
     <string name="url">url</string>
-    <string name="http_hint">ex: http://address/of/your/smart/plug?power=off</string>
+    <string name="http_hint">ex: http://smart.plug.address/?on=false</string>
     <string name="minutes">minutes</string>
     <string name="reminder_wait_explainer">Time to wait before Sparki sends repeat reminders.\n\nA setting of <b>00</b> minutes will mean no repeat reminders are sent.</string>
     <string name="alarm_timeout_explainer">Time until Sparki turns off the alarm, without power being disconnected.\n\nA setting of <b>00</b> minutes will mean the alarm does not timeout.</string>
