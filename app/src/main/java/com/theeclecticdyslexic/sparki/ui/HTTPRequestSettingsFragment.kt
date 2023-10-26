@@ -18,6 +18,7 @@ import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import com.theeclecticdyslexic.sparki.R
+import com.theeclecticdyslexic.sparki.background.MainReceiver
 import com.theeclecticdyslexic.sparki.databinding.FragmentHttpRequestBinding
 import com.theeclecticdyslexic.sparki.extensions.show
 import com.theeclecticdyslexic.sparki.misc.*

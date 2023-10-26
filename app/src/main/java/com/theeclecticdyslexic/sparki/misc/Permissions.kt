@@ -27,9 +27,13 @@ object Permissions {
                 android.Manifest.permission.ACCESS_COARSE_LOCATION,
                 android.Manifest.permission.ACCESS_WIFI_STATE) +
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.S) {
             arrayOf(android.Manifest.permission.CHANGE_NETWORK_STATE,
                     android.Manifest.permission.ACCESS_NETWORK_STATE)
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arrayOf(android.Manifest.permission.CHANGE_NETWORK_STATE,
+                    android.Manifest.permission.ACCESS_NETWORK_STATE,
+                    android.Manifest.permission.NEARBY_WIFI_DEVICES)
         } else {
             arrayOf()
         }

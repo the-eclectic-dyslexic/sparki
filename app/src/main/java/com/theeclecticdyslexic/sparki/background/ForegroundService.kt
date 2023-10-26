@@ -6,11 +6,13 @@
 package com.theeclecticdyslexic.sparki.background
 
 import android.app.*
+import android.app.ActivityManager.RunningAppProcessInfo
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import android.util.Log
 import com.theeclecticdyslexic.sparki.misc.*
+
 
 /**
  * Service used to get around the limitations of being unable to register certain
@@ -27,18 +29,26 @@ class ForegroundService : Service() {
         var running = false
             private set
 
-        fun shouldBeRunning(context: Context): Boolean {
-            val enabled = Settings.Enabled.retrieve(context)
+        fun isRunning(context: Context): Boolean {
+            val manager = (context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager?)
+                ?: return false
 
-            return  enabled && Utils.canComplete(context)
+            val processes = manager.runningAppProcesses
+            for (processInfo in processes) {
+                if (processInfo.processName.contains(ForegroundService::class.java.name)) {
+                    return true
+                }
+            }
+
+            return false
         }
 
         fun needsToStop(context: Context): Boolean {
-            return !shouldBeRunning(context) && running
+            return !Utils.canComplete(context) && running
         }
 
         fun needsToStart(context: Context): Boolean {
-            return shouldBeRunning(context) && !running
+            return Utils.canComplete(context) && !running
         }
     }
 
@@ -48,14 +58,14 @@ class ForegroundService : Service() {
         Debug.logOverHTTP("starting_service", true)
 
         try {
-            if (shouldBeRunning(this)) {
-                MainReceiver.start(this)
-            }
+            MainReceiver.start(this)
         } catch (e : Exception) {
             Log.d("Exception Occurred", "While trying to start service $e")
         }
 
-        NotificationHelper.pushSticky(this)
+        NotificationHelper.initStickyChannel(this)
+        val serviceNotification = NotificationHelper.buildSticky(this)
+        startForeground(NotificationHelper.Channel.Sticky.ordinal, serviceNotification)
 
         running = true
         return START_STICKY

@@ -24,8 +24,8 @@
     <string name="edit_alarm_button_text">edit alarm settings</string>
     <string name="edit_http_request_button_text">edit HTTP request settings</string>
     <string name="ssid">ssid</string>
-    <string name="ssid_hint">ex: MyHomeWifi</string>
-    <string name="ssid_explainer"><b>SSID</b> is the name of the Wifi network your device will be on while charging.\n\nLeaving this blank will let Sparki message the associated <b>URL</b> no matter what WiFi network your device is on… even over data.\n\n<i>Leaving SSID blank is not recommended, as Sparki might message devices you didn\'t intend him to.</i></string>
+    <string name="ssid_hint">ex: MyHomeWiFi</string>
+    <string name="ssid_explainer"><b>SSID</b> is the name of the WiFi network your device will be on while charging.\n\nLeaving this blank will let Sparki message the associated <b>URL</b> no matter what WiFi network your device is on… even over data.\n\n<i>Leaving SSID blank is not recommended, as Sparki might message devices you didn\'t intend him to.</i></string>
     <string name="url">url</string>
     <string name="http_hint">ex: http://smart.plug.address/?on=false</string>
     <string name="minutes">minutes</string>

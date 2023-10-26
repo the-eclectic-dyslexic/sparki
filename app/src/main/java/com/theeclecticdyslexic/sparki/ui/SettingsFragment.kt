@@ -188,24 +188,9 @@ class SettingsFragment : Fragment() {
         val context = requireContext()
         initControlsSwitch(context)
 
-        initSwitch(context, binding.enableAppSwitch, Settings.Enabled)
-
         initChargeSettingSwitch(context, binding.enableReminders, Settings.RemindersEnabled, binding.buttonReminderSettings)
         initChargeSettingSwitch(context, binding.enableSoundAlarm, Settings.AlarmEnabled, binding.buttonAlarmSettings)
         initChargeSettingSwitch(context, binding.enableHttpRequests, Settings.HTTPRequestsEnabled, binding.buttonHttpRequestSettings)
-    }
-
-    private fun initSwitch(context: Context, switch: SwitchCompat, setting: Settings.BooleanSetting) {
-        val listener = CompoundButton.OnCheckedChangeListener {
-                _, isChecked ->
-            makeNotificationPermissionPopup()
-            setting.store(context, isChecked)
-            when {
-                ForegroundService.needsToStart(context) -> initService()
-                ForegroundService.needsToStop(context) -> dismantleService()
-            }
-        }
-        switch.init(context, setting, listener)
     }
 
     private fun initChargeSettingSwitch(context: Context, switch: SwitchCompat, setting: Settings.BooleanSetting, buttonToHide: ImageButton) {

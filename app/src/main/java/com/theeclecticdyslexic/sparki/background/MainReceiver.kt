@@ -98,9 +98,6 @@ object MainReceiver : BroadcastReceiver() {
     }
 
     private fun onPowerConnected(context: Context) {
-        val enabled = Settings.Enabled.retrieve(context)
-        if (!enabled) return // shouldn't be necessary
-
         chargeMeasurer.start(context)
 
         Log.d("Charging State Change", "power connected")

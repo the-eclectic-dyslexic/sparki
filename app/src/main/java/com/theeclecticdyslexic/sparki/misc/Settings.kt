@@ -23,9 +23,6 @@ object Settings {
     /*
      * General Settings
      */
-    object Enabled: BooleanSetting() {
-        override val default = false
-    }
     object ControlsEnabled: BooleanSetting() {
         override val default = false
     }

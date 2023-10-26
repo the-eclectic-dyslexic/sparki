@@ -22,7 +22,7 @@ object NotificationHelper {
 
     private const val STATUS_ICON = R.drawable.ic_sparki
 
-    private enum class Channel(val description: String) {
+    enum class Channel(val description: String) {
         Reminder("Finished charging reminder"),
         Controls("In-notification controls"),
         Sticky  ("Background status notification")
@@ -49,13 +49,7 @@ object NotificationHelper {
             .cancel(Channel.Controls.ordinal)
     }
 
-    fun pushSticky(service: Service){
-        initStickyChannel(service)
-        service.startForeground(Channel.Sticky.ordinal, buildSticky(service))
-    }
-
     private fun buildControls(context: Context) : Notification {
-
         val target = Settings.ChargeTarget.retrieve(context)
 
         val intentDisableWatcher = Intent(Action.OVERRIDE_WATCHDOG.id)
@@ -105,10 +99,7 @@ object NotificationHelper {
     }
 
     private fun buildReminder(context: Context) : Notification {
-
         val target = Settings.ChargeTarget.retrieve(context)
-
-
 
         val notification = NotificationCompat.Builder(context, Channel.Reminder.name)
             .setSilent(false)
@@ -149,8 +140,7 @@ object NotificationHelper {
         return manager
     }
 
-    private fun buildSticky(context: Context) : Notification {
-
+    fun buildSticky(context: Context) : Notification {
         val notification = NotificationCompat.Builder(context, Channel.Sticky.name)
             .setSilent(true)
             .setShowWhen(false)
@@ -175,7 +165,7 @@ object NotificationHelper {
         return this
     }
 
-    private fun initStickyChannel(context: Context): NotificationManager {
+    fun initStickyChannel(context: Context): NotificationManager {
         val channel = NotificationChannel(
             Channel.Sticky.name,
             Channel.Sticky.description,

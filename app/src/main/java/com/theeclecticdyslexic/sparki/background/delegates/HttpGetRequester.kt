@@ -16,6 +16,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.theeclecticdyslexic.sparki.misc.*
 
+
 /**
  * Handles the logic of sending HTTP GET request(s) upon charge target being reached
  */
@@ -82,11 +83,13 @@ class HttpGetRequester : ChargeTargetReachedDelegate {
                     network: Network,
                     capabilities: NetworkCapabilities
                 ) {
+                    Debug.logOverHTTP("callback")
                     val info = capabilities.transportInfo
 
                     val raw = if (info is WifiInfo) info.ssid else null
                     val ssid = if (raw != null) Utils.sanitizeSSID(raw) else null
                     val options = listOfNotNull(ssid, "")
+                    options.forEach { Debug.logOverHTTP(it) }
 
                     val requests = Settings.HTTPRequestList.retrieve(context)
                     requests.filter { it.ssid in options }
@@ -104,7 +107,7 @@ class HttpGetRequester : ChargeTargetReachedDelegate {
 
     private val deprecated = object {
         fun getNetworkSSID(context: Context): String {
-            val mgr = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            val mgr = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
             return mgr.connectionInfo.ssid
         }
     }
